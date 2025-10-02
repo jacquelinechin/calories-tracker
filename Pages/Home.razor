@@ -1,39 +1,50 @@
-﻿@* @page "/"
-
-<PageTitle>Home</PageTitle>
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app. *@
-
-@page "/"
+﻿@page "/"
+@using CaloriesTracker.Models
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<h3>Calories Tracker</h3>
+<h3>Daily Calories Tracker</h3>
 
+<input @bind="mealInput" placeholder="Enter meal" />
 <input @bind="calorieInput" placeholder="Enter calories" />
-<button @onclick="AddCalories">Add</button>
+<button class="btn btn-primary" @onclick="AddCalories">Add</button>
 
 <ul>
-    @foreach (var c in calories)
+    @foreach (var item in data)
     {
-        <li>@c</li>
+        <li>@item.Meal : @item.Calories kcal</li>
     }
 </ul>
 
+<p>Total calories consumed today: @totalCalories kcal / @(dailyCaloriesGoal != null ? $"{dailyCaloriesGoal} kcal" : "Set your daily calories goal!")</p>
+
 @code {
+    private string mealInput = "";
     private int calorieInput;
-    private List<int> calories = new();
+    private List<MealItem> data = new();
+    private int totalCalories = 0;
+    private int? dailyCaloriesGoal;
 
     protected override async Task OnInitializedAsync()
     {
-        calories = await localStorage.GetItemAsync<List<int>>("calories") ?? new List<int>();
+        data = await localStorage.GetItemAsync<List<MealItem>>(DateTime.Today.ToString("dd-MM-yyyy")) ?? new List<MealItem>();
+        dailyCaloriesGoal = await localStorage.GetItemAsync<int?>("dailyCaloriesGoal");
+        foreach (var item in data)
+        {
+            totalCalories += item.Calories;
+        }
     }
 
     private async Task AddCalories()
     {
-        calories.Add(calorieInput);
-        await localStorage.SetItemAsync("calories", calories);
+        var mealItem = new MealItem()
+        {
+            Meal = mealInput,
+            Calories = calorieInput
+        };
+        totalCalories += calorieInput;
+        data.Add(mealItem);
+        await localStorage.SetItemAsync(DateTime.Today.ToString("dd-MM-yyyy"), data);
+        mealInput = "";
         calorieInput = 0;
     }
 }
