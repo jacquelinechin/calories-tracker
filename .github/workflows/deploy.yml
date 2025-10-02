@@ -1,0 +1,35 @@
+name: Deploy Blazor WebAssembly to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.305'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build and publish
+        run: dotnet publish -c Release -o publish
+
+      - name: Fix base href for GitHub Pages
+        # replace / with /calories-tracker/ so the app loads from the subpath
+        run: sed -i 's|<base href=\"/\"|<base href=\"/calories-tracker/\"|' publish/wwwroot/index.html
+
+      - name: Deploy to GitHub Pages (gh-pages branch)
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./publish/wwwroot
+          publish_branch: gh-pages
