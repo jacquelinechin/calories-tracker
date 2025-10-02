@@ -1,0 +1,39 @@
+﻿@* @page "/"
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app. *@
+
+@page "/"
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<h3>Calories Tracker</h3>
+
+<input @bind="calorieInput" placeholder="Enter calories" />
+<button @onclick="AddCalories">Add</button>
+
+<ul>
+    @foreach (var c in calories)
+    {
+        <li>@c</li>
+    }
+</ul>
+
+@code {
+    private int calorieInput;
+    private List<int> calories = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        calories = await localStorage.GetItemAsync<List<int>>("calories") ?? new List<int>();
+    }
+
+    private async Task AddCalories()
+    {
+        calories.Add(calorieInput);
+        await localStorage.SetItemAsync("calories", calories);
+        calorieInput = 0;
+    }
+}
