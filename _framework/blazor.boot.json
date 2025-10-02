@@ -1,10 +1,10 @@
 {
   "mainAssemblyName": "CaloriesTracker",
   "resources": {
-    "hash": "sha256-Qr1upeboBJzf19PoYOPIYHfugBkHhllrlq+VxJoqJcw=",
+    "hash": "sha256-LzxQ1qZvklUaKqJI3sJTuMtEejV0IYOa6z/0aC8q6DY=",
     "fingerprinting": {
       "Blazored.LocalStorage.12n6dz54qr.wasm": "Blazored.LocalStorage.wasm",
-      "Microsoft.AspNetCore.Components.3b83ekcdex.wasm": "Microsoft.AspNetCore.Components.wasm",
+      "Microsoft.AspNetCore.Components.pd9563701k.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.ca5xgge1r2.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
       "Microsoft.AspNetCore.Components.WebAssembly.26c9tx9k9t.wasm": "Microsoft.AspNetCore.Components.WebAssembly.wasm",
       "Microsoft.Extensions.Configuration.cyz6aj3end.wasm": "Microsoft.Extensions.Configuration.wasm",
@@ -32,13 +32,13 @@
       "System.Net.Primitives.yjcmep7m7h.wasm": "System.Net.Primitives.wasm",
       "System.Private.Uri.ventfxaog2.wasm": "System.Private.Uri.wasm",
       "System.Runtime.InteropServices.JavaScript.f7txb1es0b.wasm": "System.Runtime.InteropServices.JavaScript.wasm",
-      "System.Runtime.81lf91g1hx.wasm": "System.Runtime.wasm",
+      "System.Runtime.4w6ktqdgo2.wasm": "System.Runtime.wasm",
       "System.Text.Encodings.Web.08ymq1fvcr.wasm": "System.Text.Encodings.Web.wasm",
       "System.Text.Json.sikpqtqagt.wasm": "System.Text.Json.wasm",
       "System.Text.RegularExpressions.iw0spnuwfj.wasm": "System.Text.RegularExpressions.wasm",
       "System.Threading.92ez24v1xd.wasm": "System.Threading.wasm",
-      "System.Private.CoreLib.q4wq2r63ao.wasm": "System.Private.CoreLib.wasm",
-      "CaloriesTracker.j8lz1byo2i.wasm": "CaloriesTracker.wasm",
+      "System.Private.CoreLib.d4k666inei.wasm": "System.Private.CoreLib.wasm",
+      "CaloriesTracker.e0bqvced0d.wasm": "CaloriesTracker.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.9ih887ebfz.js": "dotnet.native.js",
       "dotnet.native.21mns4qp4i.wasm": "dotnet.native.wasm",
@@ -63,11 +63,11 @@
     },
     "coreAssembly": {
       "System.Runtime.InteropServices.JavaScript.f7txb1es0b.wasm": "sha256-5X6FWiZE4NSx4s9iNjfVim2lWQpcbVIsorx1vB6lyno=",
-      "System.Private.CoreLib.q4wq2r63ao.wasm": "sha256-KtMkbAbijP1R0VvoAgHPEgAVX+aIewOa3xexSE218dQ="
+      "System.Private.CoreLib.d4k666inei.wasm": "sha256-o9bkTvrvLC6vEuYNOw3higK9ZO0hCnUwz+1IjVXFpUg="
     },
     "assembly": {
       "Blazored.LocalStorage.12n6dz54qr.wasm": "sha256-OaMAAd5n7ORfyur5e3QIyEVKJ76MKIvwbg7/icnnYcU=",
-      "Microsoft.AspNetCore.Components.3b83ekcdex.wasm": "sha256-z+rt+MxIuSVJ+rxYK5FbxDC/5aicXAnvfc6JvLprOu0=",
+      "Microsoft.AspNetCore.Components.pd9563701k.wasm": "sha256-veDnHM3Rfp0/Ulk5Ih/lSIkDVkfk9/+XV+yKgOQQNQs=",
       "Microsoft.AspNetCore.Components.Web.ca5xgge1r2.wasm": "sha256-/PbvE6qnnEDO3aL/UsN1rdRqu86udyP8e55jCA8jTgI=",
       "Microsoft.AspNetCore.Components.WebAssembly.26c9tx9k9t.wasm": "sha256-JmnBR4DcINen5czBo7dWB5Wil0VAtvxF2gFSwXW5Lc0=",
       "Microsoft.Extensions.Configuration.cyz6aj3end.wasm": "sha256-fN4AyqImDQ+h3H7tFeF4ZSkjIHJ7qWgbKL217x6P53s=",
@@ -94,12 +94,12 @@
       "System.Net.Http.aj8lzzud17.wasm": "sha256-ilIRZnREp12c8liYaYYEio9SxBqh5EvJvyEbrM6Hs1s=",
       "System.Net.Primitives.yjcmep7m7h.wasm": "sha256-DqsumNiS0cF1FXZ5sSRsGHgAG63fChKhelkEA9f6A50=",
       "System.Private.Uri.ventfxaog2.wasm": "sha256-ObE2W8ZT2OOvhxcL5o9ArsW//W0chkJ5m6lO7P4bPng=",
-      "System.Runtime.81lf91g1hx.wasm": "sha256-xFq/xFgMlUL9oWkG9uv562FxXYuzkL9ir31XygOm6/k=",
+      "System.Runtime.4w6ktqdgo2.wasm": "sha256-HOsd97Hv80mdPqt2f7vUZVWepwZoMLIf8R7YSdk+edU=",
       "System.Text.Encodings.Web.08ymq1fvcr.wasm": "sha256-QPumUm/+bRPi/T+QpPMfrlCeezAnzRk6CmD/iBskgiw=",
       "System.Text.Json.sikpqtqagt.wasm": "sha256-JEIbMnFqfA0kv0ozHkBsW0wWI9Dzcrx+oyFGxnE8dHg=",
       "System.Text.RegularExpressions.iw0spnuwfj.wasm": "sha256-brePSJbVX9/S1oeowE3uQzk86zwwEyOU4O+gsdW3QTQ=",
       "System.Threading.92ez24v1xd.wasm": "sha256-8TOdx+WTSrBAkPVcYh/dHgxZeRNAfj3bK1p4ESYA1bo=",
-      "CaloriesTracker.j8lz1byo2i.wasm": "sha256-vdwXruV/1l3keAZYnjK3xvLCsPbz+/lI3yV2ofzvyp4="
+      "CaloriesTracker.e0bqvced0d.wasm": "sha256-PglttkwEcwM8j4FLZ/45TPeGI1GFGVRE1JUIKHXOhF8="
     }
   },
   "cacheBootResources": true,
