@@ -1,7 +1,0 @@
-C:\Users\User\source\repos\calories-tracker\CaloriesTracker\obj\Debug\net9.0\CaloriesTracker.csproj.AssemblyReference.cache
-C:\Users\User\source\repos\calories-tracker\CaloriesTracker\obj\Debug\net9.0\rpswa.dswa.cache.json
-C:\Users\User\source\repos\calories-tracker\CaloriesTracker\obj\Debug\net9.0\CaloriesTracker.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\User\source\repos\calories-tracker\CaloriesTracker\obj\Debug\net9.0\CaloriesTracker.AssemblyInfoInputs.cache
-C:\Users\User\source\repos\calories-tracker\CaloriesTracker\obj\Debug\net9.0\CaloriesTracker.AssemblyInfo.cs
-C:\Users\User\source\repos\calories-tracker\CaloriesTracker\obj\Debug\net9.0\CaloriesTracker.csproj.CoreCompileInputs.cache
-C:\Users\User\source\repos\calories-tracker\CaloriesTracker\obj\Debug\net9.0\CaloriesTracker.MvcApplicationPartsAssemblyInfo.cache
