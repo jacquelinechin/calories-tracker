@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "CaloriesTracker",
   "resources": {
-    "hash": "sha256-ZcDWrLiNlnT6au64MYiS5EujGFUWI37d+eGvF6xsLK4=",
+    "hash": "sha256-/6Olbp7rCifD3S2ksy3zp5JiyYpjKF5j1SPnUfcINQk=",
     "fingerprinting": {
       "Blazored.LocalStorage.12n6dz54qr.wasm": "Blazored.LocalStorage.wasm",
       "Microsoft.AspNetCore.Components.35wvli2rat.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -94,7 +94,7 @@
       "System.8rv0tdtrxz.wasm": "System.wasm",
       "netstandard.gdd6vcbm48.wasm": "netstandard.wasm",
       "System.Private.CoreLib.3fy4u49i0w.wasm": "System.Private.CoreLib.wasm",
-      "CaloriesTracker.0xbxlf80ie.wasm": "CaloriesTracker.wasm",
+      "CaloriesTracker.j4osbd9rz4.wasm": "CaloriesTracker.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.l4ptthxatg.js": "dotnet.native.js",
       "dotnet.native.d2w7colv7e.wasm": "dotnet.native.wasm",
@@ -211,7 +211,7 @@
       "System.Xml.XDocument.ocxzop4g63.wasm": "sha256-mO8Myb/YHsEXA9rrh5dZinveqXGkEbaG2JNi9ZpvjnY=",
       "System.8rv0tdtrxz.wasm": "sha256-xMF0eauQ5DkSzUozHLFFMQnL6DSJO09nJLtgag+Dzbw=",
       "netstandard.gdd6vcbm48.wasm": "sha256-NOhRwVvO9+NquYliwdbqOwK4M+QtgE6hdl+dMntQErk=",
-      "CaloriesTracker.0xbxlf80ie.wasm": "sha256-bPS7zbVYb0WSCnkugfc/KJKhEEqK/ubeBLp1dre5iFI="
+      "CaloriesTracker.j4osbd9rz4.wasm": "sha256-I/gDRXlnwlECmYzb8lPHZ8i6iPum+NnMWsbRF3xVt98="
     }
   },
   "cacheBootResources": true,
