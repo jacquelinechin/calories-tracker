@@ -1,0 +1,82 @@
+﻿@page "/login"
+@using System.Text.Json
+@using CaloriesTracker.Services
+@inject Supabase.Client SupabaseClient
+@inject IJSRuntime JS
+@inject AuthService AuthService
+
+
+<h3>Login or Sign Up</h3>
+
+@if (user is not null)
+{
+    <p>Welcome, @user.Email!</p>
+    <button class="btn btn-secondary" @onclick="Logout">Logout</button>
+}
+else
+{
+    <input @bind="email" placeholder="Email" />
+    <input @bind="password" type="password" placeholder="Password" />
+    <button class="btn btn-primary" @onclick="Login">Login</button>
+    <button class="btn btn-secondary" @onclick="SignUp">Sign Up</button>
+    <p>@message</p>
+}
+
+@code {
+    // [Inject]
+    // public required Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
+
+    private Supabase.Gotrue.User? user;
+    private string email = "";
+    private string password = "";
+    private string message = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await AuthService.GetCurrentUserAsync();
+    }
+
+    private async Task Login()
+    {
+        message = "";
+        try
+        {
+            var result = await SupabaseClient.Auth.SignIn(email, password);
+            if (result != null)
+            {
+                // await localStorage.SetItemAsync("supabase_session", JsonSerializer.Serialize(result));
+                await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
+                user = result.User;
+            }
+        }
+        catch (Exception ex)
+        {
+            message = "Error: " + ex.Message;
+        }
+    }
+
+    private async Task SignUp()
+    {
+        message = "";
+        try
+        {
+            var result = await SupabaseClient.Auth.SignUp(email, password);
+            if (result != null)
+            {
+                // await localStorage.SetItemAsync("supabase_session", JsonSerializer.Serialize(result));
+                await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
+                user = result.User;
+            }
+        }
+        catch (Exception ex)
+        {
+            message = "Error: " + ex.Message;
+        }
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        user = null;
+    }
+}

@@ -1,50 +1,160 @@
 ﻿@page "/"
 @using CaloriesTracker.Models
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <h3>Daily Calories Tracker</h3>
 
-<input @bind="mealInput" placeholder="Enter meal" />
-<input @bind="calorieInput" placeholder="Enter calories" />
-<button class="btn btn-primary" @onclick="AddCalories">Add</button>
-
-<ul>
-    @foreach (var item in data)
+<InputText @bind-Value="inputMeal.MealName" />
+<InputDate @bind-Value="inputMeal.Date" />
+@* <InputSelect @bind-Value="inputMeal.Fullness" class="form-select">
+    @foreach (var value in Enum.GetValues(typeof(Fullness)))
     {
-        <li>@item.Meal : @item.Calories kcal</li>
+        <option value="@value">@value</option>
+    }
+</InputSelect> *@
+<div class="flex flex-col gap-2 w-64">
+    <input type="range"
+           class="slider"
+           min="0"
+           max="4"
+           step="1"
+           @bind="inputMeal.Fullness" />
+    <div class="text-sm mt-1 text-gray-700">
+        <strong>@((Fullness)inputMeal.Fullness)</strong>
+    </div>
+</div>
+<InputNumber @bind-Value="inputMeal.Calories" /> kcal
+<InputSelect @bind-Value="inputMeal.MealType" class="form-select">
+    @foreach (var value in Enum.GetValues(typeof(MealType)))
+    {
+        <option value="@value">@value</option>
+    }
+</InputSelect>
+<button class="btn btn-primary" @onclick='() => UpsertMeal()'>Add</button>
+
+<h4>Breakfast</h4>
+<ul>
+    @foreach (var item in meals.Where(x => x.MealType == MealType.Breakfast))
+    {
+        <li>
+            <InputText @bind-Value="item.MealName" />
+            <InputDate @bind-Value="item.Date" />
+            <div class="flex flex-col gap-2 w-64">
+                <input type="range"
+                       class="slider"
+                       min="0"
+                       max="4"
+                       step="1"
+                       @bind="item.Fullness" />
+                <div class="text-sm mt-1 text-gray-700">
+                    <strong>@((Fullness)item.Fullness)</strong>
+                </div>
+            </div>
+            <InputNumber @bind-Value="item.Calories" /> kcal
+            <InputSelect @bind-Value="item.MealType" class="form-select">
+                @foreach (var value in Enum.GetValues(typeof(MealType)))
+                {
+                    <option value="@value">@value</option>
+                }
+            </InputSelect>
+            <button class="btn btn-primary" @onclick='() => UpsertMeal(item)'>Edit</button>
+            <button class="btn btn-secondary" @onclick='() => DeleteMeal(item.Id)'>Delete</button>
+        </li>
     }
 </ul>
 
-<p>Total calories consumed today: @totalCalories kcal / @(dailyCaloriesGoal != null ? $"{dailyCaloriesGoal} kcal" : "Set your daily calories goal!")</p>
-
-@code {
-    private string mealInput = "";
-    private int calorieInput;
-    private List<MealItem> data = new();
-    private int totalCalories = 0;
-    private int? dailyCaloriesGoal;
-
-    protected override async Task OnInitializedAsync()
+<h4>Lunch</h4>
+<ul>
+    @foreach (var item in meals.Where(x => x.MealType == MealType.Lunch))
     {
-        data = await localStorage.GetItemAsync<List<MealItem>>(DateTime.Today.ToString("dd-MM-yyyy")) ?? new List<MealItem>();
-        dailyCaloriesGoal = await localStorage.GetItemAsync<int?>("dailyCaloriesGoal");
-        foreach (var item in data)
-        {
-            totalCalories += item.Calories;
-        }
+        <li>
+            <InputText @bind-Value="item.MealName" />
+            <InputDate @bind-Value="item.Date" />
+            <div class="flex flex-col gap-2 w-64">
+                <input type="range"
+                       class="slider"
+                       min="0"
+                       max="4"
+                       step="1"
+                       @bind="item.Fullness" />
+                <div class="text-sm mt-1 text-gray-700">
+                    <strong>@((Fullness)item.Fullness)</strong>
+                </div>
+            </div>
+            <InputNumber @bind-Value="item.Calories" /> kcal
+            <InputSelect @bind-Value="item.MealType" class="form-select">
+                @foreach (var value in Enum.GetValues(typeof(MealType)))
+                {
+                    <option value="@value">@value</option>
+                }
+            </InputSelect>
+            <button class="btn btn-primary" @onclick='() => UpsertMeal(item)'>Edit</button>
+            <button class="btn btn-secondary" @onclick='() => DeleteMeal(item.Id)'>Delete</button>
+        </li>
+    }
+</ul>
+
+<h4>Dinner</h4>
+<ul>
+    @foreach (var item in meals.Where(x => x.MealType == MealType.Dinner))
+    {
+        <li>
+            <InputText @bind-Value="item.MealName" />
+            <InputDate @bind-Value="item.Date" />
+            <div class="flex flex-col gap-2 w-64">
+                <input type="range"
+                       class="slider"
+                       min="0"
+                       max="4"
+                       step="1"
+                       @bind="item.Fullness" />
+                <div class="text-sm mt-1 text-gray-700">
+                    <strong>@((Fullness)item.Fullness)</strong>
+                </div>
+            </div>
+            <InputNumber @bind-Value="item.Calories" /> kcal
+            <InputSelect @bind-Value="item.MealType" class="form-select">
+                @foreach (var value in Enum.GetValues(typeof(MealType)))
+                {
+                    <option value="@value">@value</option>
+                }
+            </InputSelect>
+            <button class="btn btn-primary" @onclick='() => UpsertMeal(item)'>Edit</button>
+            <button class="btn btn-secondary" @onclick='() => DeleteMeal(item.Id)'>Delete</button>
+        </li>
+    }
+</ul>
+
+<p>Total calories consumed today: @totalCalories kcal / @(dailyCaloriesGoal > 0 ? $"{dailyCaloriesGoal} kcal" : "Set your daily calories goal!")</p>
+
+<style>
+    .slider {
+        width: 100%;
+        accent-color: #10b981; /* Tailwind emerald green */
+        cursor: pointer;
     }
 
-    private async Task AddCalories()
-    {
-        var mealItem = new MealItem()
-        {
-            Meal = mealInput,
-            Calories = calorieInput
-        };
-        totalCalories += calorieInput;
-        data.Add(mealItem);
-        await localStorage.SetItemAsync(DateTime.Today.ToString("dd-MM-yyyy"), data);
-        mealInput = "";
-        calorieInput = 0;
+    /* Optional fancy gradient background */
+    .slider::-webkit-slider-runnable-track {
+        height: 8px;
+        background: linear-gradient(to right,
+            #22c55e 0%,    /* green */
+            #eab308 50%,   /* yellow */
+            #ef4444 100%); /* red */
+        border-radius: 8px;
     }
-}
+
+    .slider::-webkit-slider-thumb {
+        appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #10b981;
+        margin-top: -4px;
+        transition: background 0.2s;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+        background: #10b981;
+    }
+</style>
