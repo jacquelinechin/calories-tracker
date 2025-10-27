@@ -95,5 +95,10 @@ namespace CaloriesTracker.Pages
                 totalCalories += item.Calories;
             }
         }
+
+        private void SetFullness(Fullness level)
+        {
+            inputMeal.Fullness = (int)level;
+        }
     }
 }

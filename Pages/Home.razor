@@ -3,33 +3,45 @@
 
 <h3>Daily Calories Tracker</h3>
 
-<InputText @bind-Value="inputMeal.MealName" />
-<InputDate @bind-Value="inputMeal.Date" />
-@* <InputSelect @bind-Value="inputMeal.Fullness" class="form-select">
-    @foreach (var value in Enum.GetValues(typeof(Fullness)))
-    {
-        <option value="@value">@value</option>
-    }
-</InputSelect> *@
-<div class="flex flex-col gap-2 w-64">
-    <input type="range"
-           class="slider"
-           min="0"
-           max="4"
-           step="1"
-           @bind="inputMeal.Fullness" />
-    <div class="text-sm mt-1 text-gray-700">
-        <strong>@((Fullness)inputMeal.Fullness)</strong>
+<div class="form-container">
+    <h4 class="mb-3">Add Meal</h4>
+    <div class="mb-3">
+        <label class="form-label">Meal Name</label>
+        <InputText class="form-control" @bind-Value="inputMeal.MealName" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Date</label>
+        <InputDate class="form-control" @bind-Value="inputMeal.Date" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Fullness: @((Fullness)inputMeal.Fullness)</label>
+        <div class="food-icon-container">
+            @foreach (var level in Enum.GetValues<Fullness>())
+            {
+                <button class="food-icon @(inputMeal.Fullness >= (int)level ? "active" : "")"
+                        @onclick="() => SetFullness(level)">
+                    🍔
+                </button>
+            }
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Calories</label>
+        <InputNumber class="form-control" @bind-Value="inputMeal.Calories" /> kcal
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Meal Type</label>
+        <InputSelect @bind-Value="inputMeal.MealType" class="form-select">
+            @foreach (var value in Enum.GetValues(typeof(MealType)))
+            {
+                <option value="@value">@value</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="form-button-group">
+        <button class="btn btn-primary" @onclick='() => UpsertMeal()'>Add</button>
     </div>
 </div>
-<InputNumber @bind-Value="inputMeal.Calories" /> kcal
-<InputSelect @bind-Value="inputMeal.MealType" class="form-select">
-    @foreach (var value in Enum.GetValues(typeof(MealType)))
-    {
-        <option value="@value">@value</option>
-    }
-</InputSelect>
-<button class="btn btn-primary" @onclick='() => UpsertMeal()'>Add</button>
 
 <h4>Breakfast</h4>
 <ul>
@@ -38,16 +50,16 @@
         <li>
             <InputText @bind-Value="item.MealName" />
             <InputDate @bind-Value="item.Date" />
-            <div class="flex flex-col gap-2 w-64">
-                <input type="range"
-                       class="slider"
-                       min="0"
-                       max="4"
-                       step="1"
-                       @bind="item.Fullness" />
-                <div class="text-sm mt-1 text-gray-700">
-                    <strong>@((Fullness)item.Fullness)</strong>
-                </div>
+            <div>
+                <strong>Fullness: @((Fullness)item.Fullness)</strong>
+            </div>
+            <div class="food-icon-container">
+                @foreach (var level in Enum.GetValues<Fullness>())
+                {
+                    <button class="food-icon-display @(item.Fullness >= (int)level ? "active" : "")">
+                        🍔
+                    </button>
+                }
             </div>
             <InputNumber @bind-Value="item.Calories" /> kcal
             <InputSelect @bind-Value="item.MealType" class="form-select">
@@ -69,16 +81,16 @@
         <li>
             <InputText @bind-Value="item.MealName" />
             <InputDate @bind-Value="item.Date" />
-            <div class="flex flex-col gap-2 w-64">
-                <input type="range"
-                       class="slider"
-                       min="0"
-                       max="4"
-                       step="1"
-                       @bind="item.Fullness" />
-                <div class="text-sm mt-1 text-gray-700">
-                    <strong>@((Fullness)item.Fullness)</strong>
-                </div>
+            <div>
+                <strong>Fullness: @((Fullness)item.Fullness)</strong>
+            </div>
+            <div class="food-icon-container">
+                @foreach (var level in Enum.GetValues<Fullness>())
+                {
+                    <button class="food-icon-display @(item.Fullness >= (int)level ? "active" : "")">
+                        🍔
+                    </button>
+                }
             </div>
             <InputNumber @bind-Value="item.Calories" /> kcal
             <InputSelect @bind-Value="item.MealType" class="form-select">
@@ -100,16 +112,16 @@
         <li>
             <InputText @bind-Value="item.MealName" />
             <InputDate @bind-Value="item.Date" />
-            <div class="flex flex-col gap-2 w-64">
-                <input type="range"
-                       class="slider"
-                       min="0"
-                       max="4"
-                       step="1"
-                       @bind="item.Fullness" />
-                <div class="text-sm mt-1 text-gray-700">
-                    <strong>@((Fullness)item.Fullness)</strong>
-                </div>
+            <div>
+                <strong>Fullness: @((Fullness)item.Fullness)</strong>
+            </div>
+            <div class="food-icon-container">
+                @foreach (var level in Enum.GetValues<Fullness>())
+                {
+                    <button class="food-icon-display @(item.Fullness >= (int)level ? "active" : "")">
+                        🍔
+                    </button>
+                }
             </div>
             <InputNumber @bind-Value="item.Calories" /> kcal
             <InputSelect @bind-Value="item.MealType" class="form-select">
@@ -127,6 +139,57 @@
 <p>Total calories consumed today: @totalCalories kcal / @(dailyCaloriesGoal > 0 ? $"{dailyCaloriesGoal} kcal" : "Set your daily calories goal!")</p>
 
 <style>
+    .food-icon {
+        font-size: 2rem;
+        opacity: 0.3;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+        .food-icon:hover {
+            transform: scale(1.2);
+            opacity: 0.8;
+        }
+
+        .food-icon.active {
+            opacity: 1;
+            filter: drop-shadow(0 0 4px #f59e0b); /* glowing amber highlight */
+        }
+
+    .food-icon-display {
+        font-size: 2rem;
+        opacity: 0.3;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+        .food-icon-display.active {
+            opacity: 1;
+            filter: drop-shadow(0 0 4px #f59e0b); /* glowing amber highlight */
+        }
+
+    .food-icon-container {
+        margin-top: -3px;
+    }
+
+    .form-container {
+        border: 1px solid #dee2e6;
+        border-radius: 2rem;
+        padding: 1.5rem;
+    }
+
+    .form-button-group {
+        display: flex;
+        justify-content: flex-end;
+    }
+</style>
+
+@* <style>
     .slider {
         width: 100%;
         accent-color: #10b981; /* Tailwind emerald green */
@@ -157,4 +220,4 @@
     .slider::-webkit-slider-thumb:hover {
         background: #10b981;
     }
-</style>
+</style> *@
