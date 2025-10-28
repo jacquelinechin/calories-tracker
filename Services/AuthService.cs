@@ -27,7 +27,7 @@ namespace CaloriesTracker.Services
                 if (!string.IsNullOrEmpty(saved))
                 {
                     var restored = JsonSerializer.Deserialize<Session>(saved);
-                    if (restored != null)
+                    if (restored != null && restored.AccessToken != null && restored.RefreshToken != null)
                     {
                         await _supabase.Auth.SetSession(restored.AccessToken, restored.RefreshToken);
                         return await _supabase.Auth.GetUser(restored.AccessToken);

@@ -12,6 +12,6 @@
 
         public int Calories { get; set; }
 
-        public int Fullness { get; set; }
+        public Fullness Fullness { get; set; }
     }
 }

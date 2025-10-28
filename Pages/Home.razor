@@ -3,34 +3,44 @@
 
 <h3>Daily Calories Tracker</h3>
 
-<div class="form-container">
-    <h4 class="mb-3">Add Meal</h4>
-    <div class="mb-3">
-        <label class="form-label">Meal Name</label>
+<div id="meal-form"></div>
+<div class="form-button-group" style="display: @(showMealForm ? "none" : "")">
+    <button class="btn btn-outline-primary" @onclick='() => showMealForm = true'>Add New Meal</button>
+</div>
+<div class="form-container" style="display: @(showMealForm ? "" : "none")">
+    <div class="meal-card-row mb-2">
+        <h4>Add Meal</h4>
+        <button class="btn btn-outline-secondary icon-button" title="Close" @onclick='() => { showMealForm = false; inputMeal = new(); }'>
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+    <div class="mb-2">
+        <label>Meal Name</label>
         <InputText class="form-control" @bind-Value="inputMeal.MealName" />
     </div>
-    <div class="mb-3">
-        <label class="form-label">Date</label>
+    <div class="mb-2">
+        <label>Date</label>
         <InputDate class="form-control" @bind-Value="inputMeal.Date" />
     </div>
-    <div class="mb-3">
-        <label class="form-label">Fullness: @((Fullness)inputMeal.Fullness)</label>
+    <div class="mb-2">
+        <label>Fullness: @inputMeal.Fullness</label>
         <div class="food-icon-container">
             @foreach (var level in Enum.GetValues<Fullness>())
             {
-                <button class="food-icon @(inputMeal.Fullness >= (int)level ? "active" : "")"
+                <button class="food-icon @((int)inputMeal.Fullness >= (int)level ? "active" : "")"
                         @onclick="() => SetFullness(level)">
                     🍔
                 </button>
             }
         </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label">Calories</label>
-        <InputNumber class="form-control" @bind-Value="inputMeal.Calories" /> kcal
+    <div class="mb-2">
+        <label>Calories</label>
+        <InputNumber class="form-control" @bind-Value="inputMeal.Calories" />
+        <label class="font-caption">kcal</label>
     </div>
-    <div class="mb-3">
-        <label class="form-label">Meal Type</label>
+    <div class="mb-2">
+        <label>Meal Type</label>
         <InputSelect @bind-Value="inputMeal.MealType" class="form-select">
             @foreach (var value in Enum.GetValues(typeof(MealType)))
             {
@@ -39,104 +49,119 @@
         </InputSelect>
     </div>
     <div class="form-button-group">
-        <button class="btn btn-primary" @onclick='() => UpsertMeal()'>Add</button>
+        <button class="btn btn-primary" @onclick='() => UpsertMeal()'>Save</button>
+        <button class="btn btn-secondary" @onclick='() => Clear()'>Clear</button>
     </div>
 </div>
 
-<h4>Breakfast</h4>
-<ul>
+<hr />
+
+<h4 class="mt-3">Breakfast</h4>
+<div class="meal-card-container">
     @foreach (var item in meals.Where(x => x.MealType == MealType.Breakfast))
     {
-        <li>
-            <InputText @bind-Value="item.MealName" />
-            <InputDate @bind-Value="item.Date" />
-            <div>
-                <strong>Fullness: @((Fullness)item.Fullness)</strong>
+        <div class="meal-card">
+            <div class="meal-card-row mb-2">
+                <strong>@item.MealName</strong>
+                <label class="font-caption">@item.Date.ToString("dd MMM yyyy")</label>
             </div>
-            <div class="food-icon-container">
-                @foreach (var level in Enum.GetValues<Fullness>())
-                {
-                    <button class="food-icon-display @(item.Fullness >= (int)level ? "active" : "")">
-                        🍔
+            <div class="mb-2">
+                <label>Fullness: @item.Fullness</label>
+                <div class="food-icon-container">
+                    @foreach (var level in Enum.GetValues<Fullness>())
+                    {
+                        <button class="food-icon-display @((int)item.Fullness >= (int)level ? "active" : "")">
+                            🍔
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="meal-card-row">
+                <label>@item.Calories kcal</label>
+                <div>
+                    <button class="btn btn-outline-secondary icon-button" title="Edit" @onclick='() => EditMealAsync(item)'>
+                        <i class="bi bi-pencil"></i>
                     </button>
-                }
+                    <button class="btn btn-outline-secondary icon-button" title="Delete" @onclick='() => DeleteMeal(item)'>
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </div>
-            <InputNumber @bind-Value="item.Calories" /> kcal
-            <InputSelect @bind-Value="item.MealType" class="form-select">
-                @foreach (var value in Enum.GetValues(typeof(MealType)))
-                {
-                    <option value="@value">@value</option>
-                }
-            </InputSelect>
-            <button class="btn btn-primary" @onclick='() => UpsertMeal(item)'>Edit</button>
-            <button class="btn btn-secondary" @onclick='() => DeleteMeal(item.Id)'>Delete</button>
-        </li>
+        </div>
     }
-</ul>
+</div>
 
-<h4>Lunch</h4>
-<ul>
+<h4 class="mt-3">Lunch</h4>
+<div class="meal-card-container">
     @foreach (var item in meals.Where(x => x.MealType == MealType.Lunch))
     {
-        <li>
-            <InputText @bind-Value="item.MealName" />
-            <InputDate @bind-Value="item.Date" />
-            <div>
-                <strong>Fullness: @((Fullness)item.Fullness)</strong>
+        <div class="meal-card">
+            <div class="meal-card-row mb-2">
+                <strong>@item.MealName</strong>
+                <label class="font-caption">@item.Date.ToString("dd MMM yyyy")</label>
             </div>
-            <div class="food-icon-container">
-                @foreach (var level in Enum.GetValues<Fullness>())
-                {
-                    <button class="food-icon-display @(item.Fullness >= (int)level ? "active" : "")">
-                        🍔
+            <div class="mb-2">
+                <label>Fullness: @item.Fullness</label>
+                <div class="food-icon-container">
+                    @foreach (var level in Enum.GetValues<Fullness>())
+                    {
+                        <button class="food-icon-display @((int)item.Fullness >= (int)level ? "active" : "")">
+                            🍔
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="meal-card-row">
+                <label>@item.Calories kcal</label>
+                <div>
+                    <button class="btn btn-outline-secondary icon-button" title="Edit" @onclick='() => EditMealAsync(item)'>
+                        <i class="bi bi-pencil"></i>
                     </button>
-                }
+                    <button class="btn btn-outline-secondary icon-button" title="Delete" @onclick='() => DeleteMeal(item)'>
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </div>
-            <InputNumber @bind-Value="item.Calories" /> kcal
-            <InputSelect @bind-Value="item.MealType" class="form-select">
-                @foreach (var value in Enum.GetValues(typeof(MealType)))
-                {
-                    <option value="@value">@value</option>
-                }
-            </InputSelect>
-            <button class="btn btn-primary" @onclick='() => UpsertMeal(item)'>Edit</button>
-            <button class="btn btn-secondary" @onclick='() => DeleteMeal(item.Id)'>Delete</button>
-        </li>
+        </div>
     }
-</ul>
+</div>
 
-<h4>Dinner</h4>
-<ul>
+<h4 class="mt-3">Dinner</h4>
+<div class="meal-card-container">
     @foreach (var item in meals.Where(x => x.MealType == MealType.Dinner))
     {
-        <li>
-            <InputText @bind-Value="item.MealName" />
-            <InputDate @bind-Value="item.Date" />
-            <div>
-                <strong>Fullness: @((Fullness)item.Fullness)</strong>
+        <div class="meal-card">
+            <div class="meal-card-row mb-2">
+                <strong>@item.MealName</strong>
+                <label class="font-caption">@item.Date.ToString("dd MMM yyyy")</label>
             </div>
-            <div class="food-icon-container">
-                @foreach (var level in Enum.GetValues<Fullness>())
-                {
-                    <button class="food-icon-display @(item.Fullness >= (int)level ? "active" : "")">
-                        🍔
+            <div class="mb-2">
+                <label>Fullness: @item.Fullness</label>
+                <div class="food-icon-container">
+                    @foreach (var level in Enum.GetValues<Fullness>())
+                    {
+                        <button class="food-icon-display @((int)item.Fullness >= (int)level ? "active" : "")">
+                            🍔
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="meal-card-row">
+                <label>@item.Calories kcal</label>
+                <div>
+                    <button class="btn btn-outline-secondary icon-button" title="Edit" @onclick='() => EditMealAsync(item)'>
+                        <i class="bi bi-pencil"></i>
                     </button>
-                }
+                    <button class="btn btn-outline-secondary icon-button" title="Delete" @onclick='() => DeleteMeal(item)'>
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </div>
-            <InputNumber @bind-Value="item.Calories" /> kcal
-            <InputSelect @bind-Value="item.MealType" class="form-select">
-                @foreach (var value in Enum.GetValues(typeof(MealType)))
-                {
-                    <option value="@value">@value</option>
-                }
-            </InputSelect>
-            <button class="btn btn-primary" @onclick='() => UpsertMeal(item)'>Edit</button>
-            <button class="btn btn-secondary" @onclick='() => DeleteMeal(item.Id)'>Delete</button>
-        </li>
+        </div>
     }
-</ul>
+</div>
 
-<p>Total calories consumed today: @totalCalories kcal / @(dailyCaloriesGoal > 0 ? $"{dailyCaloriesGoal} kcal" : "Set your daily calories goal!")</p>
+<p class="mt-3">Total calories consumed today: @totalCalories kcal / @(dailyCaloriesGoal > 0 ? $"{dailyCaloriesGoal} kcal" : "Set your daily calories goal!")</p>
 
 <style>
     .food-icon {
@@ -163,6 +188,7 @@
         font-size: 2rem;
         opacity: 0.3;
         transition: transform 0.2s ease, opacity 0.2s ease;
+        cursor: default !important;
         background: none;
         border: none;
         padding: 0;
@@ -174,18 +200,48 @@
         }
 
     .food-icon-container {
-        margin-top: -3px;
+        margin-top: -6px;
     }
 
     .form-container {
         border: 1px solid #dee2e6;
-        border-radius: 2rem;
-        padding: 1.5rem;
+        border-radius: 0.5rem;
+        padding: 1rem;
     }
 
     .form-button-group {
         display: flex;
         justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    .icon-button {
+        padding: 1px 6px;
+        border: none;
+    }
+
+    .meal-card-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .meal-card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+
+    .meal-card-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .font-caption {
+        font-size: 14px;
     }
 </style>
 

@@ -26,6 +26,6 @@ namespace CaloriesTracker.Models
         public int Calories { get; set; }
 
         [Column("fullness")]
-        public int Fullness { get; set; }
+        public Fullness Fullness { get; set; }
     }
 }

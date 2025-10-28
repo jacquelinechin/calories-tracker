@@ -36,7 +36,7 @@ var savedSessionJson = await js.InvokeAsync<string>("localStorage.getItem", "sup
 if (!string.IsNullOrEmpty(savedSessionJson))
 {
     var session = JsonSerializer.Deserialize<Supabase.Gotrue.Session>(savedSessionJson);
-    if (session != null)
+    if (session != null && session.AccessToken != null && session.RefreshToken != null)
     {
         await supabase.Auth.SetSession(session.AccessToken, session.RefreshToken);
     }

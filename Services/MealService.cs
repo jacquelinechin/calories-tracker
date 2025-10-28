@@ -45,20 +45,21 @@ namespace CaloriesTracker.Services
         {
             var user = await _authService.GetCurrentUserAsync();
 
+            meal.Date = DateTime.SpecifyKind(meal.Date, DateTimeKind.Utc);
+
             if (user != null)
             {
                 meal.UserId = Guid.Parse(user.Id);
-                meal.Date = DateTime.SpecifyKind(meal.Date, DateTimeKind.Utc);
 
                 var response = await _supabase.From<Meal>().Upsert(meal);
 
-                if (response.Models.Any())
-                {
-                    // Update the local meal with the DB-generated ID (for new inserts)
-                    var savedMeal = response.Models.First();
-                    meal.Id = savedMeal.Id;
-                    meal.UserId = savedMeal.UserId;
-                }
+                //if (response.Models.Any())
+                //{
+                //    // Update the local meal with the DB-generated ID (for new inserts)
+                //    var savedMeal = response.Models.First();
+                //    meal.Id = savedMeal.Id;
+                //    meal.UserId = savedMeal.UserId;
+                //}
             }
             else
             {

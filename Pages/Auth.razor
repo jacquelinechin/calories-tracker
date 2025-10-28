@@ -1,5 +1,6 @@
 ﻿@page "/login"
 @using System.Text.Json
+@using CaloriesTracker.Models
 @using CaloriesTracker.Services
 @inject Supabase.Client SupabaseClient
 @inject IJSRuntime JS
@@ -19,7 +20,6 @@ else
     <input @bind="password" type="password" placeholder="Password" />
     <button class="btn btn-primary" @onclick="Login">Login</button>
     <button class="btn btn-secondary" @onclick="SignUp">Sign Up</button>
-    <p>@message</p>
 }
 
 @code {
@@ -29,7 +29,6 @@ else
     private Supabase.Gotrue.User? user;
     private string email = "";
     private string password = "";
-    private string message = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,7 +37,6 @@ else
 
     private async Task Login()
     {
-        message = "";
         try
         {
             var result = await SupabaseClient.Auth.SignIn(email, password);
@@ -51,26 +49,31 @@ else
         }
         catch (Exception ex)
         {
-            message = "Error: " + ex.Message;
+            var error = JsonSerializer.Deserialize<SupabaseError>(ex.Message);
+            await JS.InvokeVoidAsync("alert", "Error: " + error?.Message);
         }
     }
 
     private async Task SignUp()
     {
-        message = "";
         try
         {
             var result = await SupabaseClient.Auth.SignUp(email, password);
-            if (result != null)
+            if (result != null && result.AccessToken != null)
             {
                 // await localStorage.SetItemAsync("supabase_session", JsonSerializer.Serialize(result));
                 await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
                 user = result.User;
             }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Error: User already registered");
+            }
         }
         catch (Exception ex)
         {
-            message = "Error: " + ex.Message;
+            var error = JsonSerializer.Deserialize<SupabaseError>(ex.Message);
+            await JS.InvokeVoidAsync("alert", "Error: " + error?.Message);
         }
     }
 
