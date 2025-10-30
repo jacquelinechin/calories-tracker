@@ -3,13 +3,24 @@
 
 <h3>Daily Calories Tracker</h3>
 
+<InputDate class="form-control mb-3"
+           @bind-Value="selectedDate"
+           @bind-Value:after="OnDateChanged" />
+
 <div id="meal-form"></div>
 <div class="form-button-group" style="display: @(showMealForm ? "none" : "")">
     <button class="btn btn-outline-primary" @onclick='() => showMealForm = true'>Add New Meal</button>
 </div>
 <div class="form-container" style="display: @(showMealForm ? "" : "none")">
     <div class="meal-card-row mb-2">
-        <h4>Add Meal</h4>
+        @if (inputMeal.Id == Guid.Empty)
+        {
+            <h4>Add Meal</h4>
+        }
+        else
+        {
+            <h4>Edit Meal</h4>
+        }
         <button class="btn btn-outline-secondary icon-button" title="Close" @onclick='() => { showMealForm = false; inputMeal = new(); }'>
             <i class="bi bi-x-lg"></i>
         </button>
@@ -28,7 +39,7 @@
             @foreach (var level in Enum.GetValues<Fullness>())
             {
                 <button class="food-icon @((int)inputMeal.Fullness >= (int)level ? "active" : "")"
-                        @onclick="() => SetFullness(level)">
+                        @onclick="() => inputMeal.Fullness = level">
                     🍔
                 </button>
             }
@@ -58,7 +69,7 @@
 
 <h4 class="mt-3">Breakfast</h4>
 <div class="meal-card-container">
-    @foreach (var item in meals.Where(x => x.MealType == MealType.Breakfast))
+    @foreach (var item in meals.Where(x => x.MealType == MealType.Breakfast && x.Date == selectedDate))
     {
         <div class="meal-card">
             <div class="meal-card-row mb-2">
@@ -93,7 +104,7 @@
 
 <h4 class="mt-3">Lunch</h4>
 <div class="meal-card-container">
-    @foreach (var item in meals.Where(x => x.MealType == MealType.Lunch))
+    @foreach (var item in meals.Where(x => x.MealType == MealType.Lunch && x.Date == selectedDate))
     {
         <div class="meal-card">
             <div class="meal-card-row mb-2">
@@ -128,7 +139,7 @@
 
 <h4 class="mt-3">Dinner</h4>
 <div class="meal-card-container">
-    @foreach (var item in meals.Where(x => x.MealType == MealType.Dinner))
+    @foreach (var item in meals.Where(x => x.MealType == MealType.Dinner && x.Date == selectedDate))
     {
         <div class="meal-card">
             <div class="meal-card-row mb-2">

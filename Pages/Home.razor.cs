@@ -17,18 +17,17 @@ namespace CaloriesTracker.Pages
         private int totalCalories;
         private int dailyCaloriesGoal;
         private bool showMealForm;
+        private DateTime selectedDate = DateTime.Today;
 
         protected override async Task OnInitializedAsync()
         {
             inputMeal = new();
-            totalCalories =  0;
 
             meals = await MealService.GetMealsAsync();
 
-            foreach (var item in meals)
-            {
-                totalCalories += item.Calories;
-            }
+            totalCalories = meals
+                .Where(x => x.Date.Date == selectedDate.Date)
+                .Sum(x => x.Calories);
         }
 
         private async Task UpsertMeal()
@@ -62,16 +61,18 @@ namespace CaloriesTracker.Pages
             await OnInitializedAsync();
         }
 
-        private void SetFullness(Fullness level)
-        {
-            inputMeal.Fullness = level;
-        }
-
         private async Task EditMealAsync(Meal meal)
         {
             showMealForm = true;
             inputMeal = meal;
             await JS.InvokeVoidAsync("scrollToElementWithOffset", "meal-form", 60);
+        }
+
+        private void OnDateChanged()
+        {
+            totalCalories = meals
+                .Where(x => x.Date.Date == selectedDate.Date)
+                .Sum(x => x.Calories);
         }
     }
 }
