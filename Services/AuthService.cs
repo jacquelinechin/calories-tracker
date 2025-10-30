@@ -1,7 +1,5 @@
 ﻿using Microsoft.JSInterop;
-using Supabase;
 using Supabase.Gotrue;
-using Supabase.Interfaces;
 using System.Text.Json;
 
 namespace CaloriesTracker.Services
@@ -19,24 +17,38 @@ namespace CaloriesTracker.Services
 
         public async Task<User?> GetCurrentUserAsync()
         {
-            var session = _supabase.Auth.CurrentSession;
-            if (session == null)
+            try
             {
-                // Try restore from localStorage
-                var saved = await _js.InvokeAsync<string>("localStorage.getItem", "supabase_session");
-                if (!string.IsNullOrEmpty(saved))
+                var session = _supabase.Auth.CurrentSession;
+                if (session == null || session.AccessToken == null)
                 {
-                    var restored = JsonSerializer.Deserialize<Session>(saved);
-                    if (restored != null && restored.AccessToken != null && restored.RefreshToken != null)
+                    // Try restore from localStorage
+                    var saved = await _js.InvokeAsync<string>("localStorage.getItem", "supabase_session");
+                    if (!string.IsNullOrEmpty(saved))
                     {
-                        await _supabase.Auth.SetSession(restored.AccessToken, restored.RefreshToken);
-                        return await _supabase.Auth.GetUser(restored.AccessToken);
+                        var restored = JsonSerializer.Deserialize<Session>(saved);
+                        if (restored != null && !string.IsNullOrWhiteSpace(restored.AccessToken) && !string.IsNullOrWhiteSpace(restored.RefreshToken))
+                        {
+                            await _supabase.Auth.SetSession(restored.AccessToken, restored.RefreshToken);
+                            return await _supabase.Auth.GetUser(restored.AccessToken);
+                        }
+                        else
+                        {
+                            await _js.InvokeVoidAsync("localStorage.removeItem", "supabase_session");
+                            return null;
+                        }
                     }
+                    return null;
                 }
+
+                return await _supabase.Auth.GetUser(session.AccessToken);
+            }
+            catch (Exception)
+            {
+                //await _js.InvokeVoidAsync("alert", "Error in GetCurrentUserAsync: " + ex.Message);
+                await _js.InvokeVoidAsync("localStorage.removeItem", "supabase_session");
                 return null;
             }
-
-            return await _supabase.Auth.GetUser(session.AccessToken);
         }
 
         public bool IsLoggedIn => _supabase.Auth.CurrentSession != null;

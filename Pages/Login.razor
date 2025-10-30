@@ -12,20 +12,17 @@
 @if (user is not null)
 {
     <p>Welcome, @user.Email!</p>
-    <button class="btn btn-secondary" @onclick="Logout">Logout</button>
+    <button class="btn btn-secondary" @onclick="HandleLogoutAsync">Logout</button>
 }
 else
 {
     <input @bind="email" placeholder="Email" />
     <input @bind="password" type="password" placeholder="Password" />
-    <button class="btn btn-primary" @onclick="Login">Login</button>
-    <button class="btn btn-secondary" @onclick="SignUp">Sign Up</button>
+    <button class="btn btn-primary" @onclick="HandleLoginAsync">Login</button>
+    <button class="btn btn-secondary" @onclick="HandleSignUpAsync">Sign Up</button>
 }
 
 @code {
-    // [Inject]
-    // public required Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
-
     private Supabase.Gotrue.User? user;
     private string email = "";
     private string password = "";
@@ -35,14 +32,13 @@ else
         user = await AuthService.GetCurrentUserAsync();
     }
 
-    private async Task Login()
+    private async Task HandleLoginAsync()
     {
         try
         {
             var result = await SupabaseClient.Auth.SignIn(email, password);
-            if (result != null)
+            if (result != null && result.AccessToken != null)
             {
-                // await localStorage.SetItemAsync("supabase_session", JsonSerializer.Serialize(result));
                 await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
                 user = result.User;
             }
@@ -54,14 +50,13 @@ else
         }
     }
 
-    private async Task SignUp()
+    private async Task HandleSignUpAsync()
     {
         try
         {
             var result = await SupabaseClient.Auth.SignUp(email, password);
             if (result != null && result.AccessToken != null)
             {
-                // await localStorage.SetItemAsync("supabase_session", JsonSerializer.Serialize(result));
                 await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
                 user = result.User;
             }
@@ -77,7 +72,7 @@ else
         }
     }
 
-    private async Task Logout()
+    private async Task HandleLogoutAsync()
     {
         await AuthService.LogoutAsync();
         user = null;

@@ -32,14 +32,26 @@ builder.Services.AddScoped<MealService>();
 var js = builder.Services.BuildServiceProvider().GetRequiredService<IJSRuntime>();
 
 // Try restore saved session
-var savedSessionJson = await js.InvokeAsync<string>("localStorage.getItem", "supabase_session");
-if (!string.IsNullOrEmpty(savedSessionJson))
+try
 {
-    var session = JsonSerializer.Deserialize<Supabase.Gotrue.Session>(savedSessionJson);
-    if (session != null && session.AccessToken != null && session.RefreshToken != null)
+    var savedSessionJson = await js.InvokeAsync<string>("localStorage.getItem", "supabase_session");
+    if (!string.IsNullOrEmpty(savedSessionJson))
     {
-        await supabase.Auth.SetSession(session.AccessToken, session.RefreshToken);
+        var session = JsonSerializer.Deserialize<Supabase.Gotrue.Session>(savedSessionJson);
+        if (session != null && !string.IsNullOrWhiteSpace(session.AccessToken) && !string.IsNullOrWhiteSpace(session.RefreshToken))
+        {
+            await supabase.Auth.SetSession(session.AccessToken, session.RefreshToken);
+        }
+        else
+        {
+            await js.InvokeVoidAsync("localStorage.removeItem", "supabase_session");
+        }
     }
+}
+catch (Exception)
+{
+    //await js.InvokeVoidAsync("alert", "Error in Program: " + ex.Message);
+    await js.InvokeVoidAsync("localStorage.removeItem", "supabase_session");
 }
 
 await builder.Build().RunAsync();
