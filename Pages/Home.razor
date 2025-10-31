@@ -11,57 +11,68 @@
 <div class="form-button-group" style="display: @(showMealForm ? "none" : "")">
     <button class="btn btn-outline-primary" @onclick='() => showMealForm = true'>Add New Meal</button>
 </div>
-<div class="form-container" style="display: @(showMealForm ? "" : "none")">
-    <div class="meal-card-row mb-2">
-        @if (inputMeal.Id == Guid.Empty)
-        {
-            <h4>Add Meal</h4>
-        }
-        else
-        {
-            <h4>Edit Meal</h4>
-        }
-        <button class="btn btn-outline-secondary icon-button" title="Close" @onclick='() => { showMealForm = false; inputMeal = new(); }'>
-            <i class="bi bi-x-lg"></i>
-        </button>
-    </div>
-    <div class="mb-2">
-        <label>Meal Name</label>
-        <InputText class="form-control" @bind-Value="inputMeal.MealName" />
-    </div>
-    <div class="mb-2">
-        <label>Date</label>
-        <InputDate class="form-control" @bind-Value="inputMeal.Date" />
-    </div>
-    <div class="mb-2">
-        <label>Fullness: @inputMeal.Fullness</label>
-        <div class="food-icon-container">
-            @foreach (var level in Enum.GetValues<Fullness>())
-            {
-                <button class="food-icon @((int)inputMeal.Fullness >= (int)level ? "active" : "")"
-                        @onclick="() => inputMeal.Fullness = level">
-                    🍔
+<div class="form-wrapper">
+    <div class="form-container @(showMealForm ? "show" : "hide")">
+        <EditForm Model="inputMeal" OnValidSubmit="UpsertMeal">
+            <DataAnnotationsValidator />
+
+            <div class="meal-card-row mb-2">
+                @if (inputMeal.Id == Guid.Empty)
+                {
+                    <h4>Add Meal</h4>
+                }
+                else
+                {
+                    <h4>Edit Meal</h4>
+                }
+                <button class="btn btn-outline-secondary icon-button" type="button" title="Close" @onclick='() => { showMealForm = false; Clear(); }'>
+                    <i class="bi bi-x-lg"></i>
                 </button>
-            }
-        </div>
-    </div>
-    <div class="mb-2">
-        <label>Calories</label>
-        <InputNumber class="form-control" @bind-Value="inputMeal.Calories" />
-        <label class="font-caption">kcal</label>
-    </div>
-    <div class="mb-2">
-        <label>Meal Type</label>
-        <InputSelect @bind-Value="inputMeal.MealType" class="form-select">
-            @foreach (var value in Enum.GetValues(typeof(MealType)))
-            {
-                <option value="@value">@value</option>
-            }
-        </InputSelect>
-    </div>
-    <div class="form-button-group">
-        <button class="btn btn-primary" @onclick='() => UpsertMeal()'>Save</button>
-        <button class="btn btn-secondary" @onclick='() => Clear()'>Clear</button>
+            </div>
+            <div class="mb-2">
+                <label>Meal Name</label>
+                <InputText class="form-control" @bind-Value="inputMeal.MealName" />
+                <ValidationMessage For="@(() => inputMeal.MealName)" />
+            </div>
+            <div class="mb-2">
+                <label>Date</label>
+                <InputDate class="form-control" @bind-Value="inputMeal.Date" />
+                <ValidationMessage For="@(() => inputMeal.Date)" />
+            </div>
+            <div class="mb-2">
+                <label>Fullness: @inputMeal.Fullness</label>
+                <div class="food-icon-container">
+                    @foreach (var level in Enum.GetValues<Fullness>())
+                    {
+                        <button class="food-icon @((int)inputMeal.Fullness >= (int)level ? "active" : "")" type="button"
+                                @onclick="() => inputMeal.Fullness = level">
+                            🍔
+                        </button>
+                    }
+                </div>
+                <ValidationMessage For="@(() => inputMeal.Fullness)" />
+            </div>
+            <div class="mb-2">
+                <label>Calories</label>
+                <InputNumber class="form-control" @bind-Value="inputMeal.Calories" />
+                <label class="font-caption">kcal</label>
+                <ValidationMessage For="@(() => inputMeal.Calories)" />
+            </div>
+            <div class="mb-2">
+                <label>Meal Type</label>
+                <InputSelect @bind-Value="inputMeal.MealType" class="form-select">
+                    @foreach (var value in Enum.GetValues(typeof(MealType)))
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => inputMeal.MealType)" />
+            </div>
+            <div class="form-button-group">
+                <button class="btn btn-primary" type="submit">Save</button>
+                <button class="btn btn-secondary" type="button" @onclick="Clear">Clear</button>
+            </div>
+        </EditForm>
     </div>
 </div>
 
@@ -218,6 +229,26 @@
         border: 1px solid #dee2e6;
         border-radius: 0.5rem;
         padding: 1rem;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+        .form-container.hide {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            height: 0;
+            margin: 0;
+        }
+
+        .form-container.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            height: auto;
+        }
+
+    .form-wrapper {
+        overflow: hidden; /* keeps the hidden form from taking space */
     }
 
     .form-button-group {
@@ -252,6 +283,10 @@
     }
 
     .font-caption {
+        font-size: 14px;
+    }
+
+    .validation-message {
         font-size: 14px;
     }
 </style>

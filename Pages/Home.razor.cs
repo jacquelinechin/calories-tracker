@@ -21,7 +21,10 @@ namespace CaloriesTracker.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            inputMeal = new();
+            inputMeal = new()
+            {
+                Date = selectedDate
+            };
 
             meals = await MealService.GetMealsAsync();
 
@@ -48,7 +51,10 @@ namespace CaloriesTracker.Pages
 
         private void Clear()
         {
-            inputMeal = new();
+            inputMeal = new()
+            {
+                Date = selectedDate
+            };
         }
 
         private async Task DeleteMeal(Meal meal)
@@ -70,6 +76,7 @@ namespace CaloriesTracker.Pages
 
         private void OnDateChanged()
         {
+            Clear();
             totalCalories = meals
                 .Where(x => x.Date.Date == selectedDate.Date)
                 .Sum(x => x.Calories);
