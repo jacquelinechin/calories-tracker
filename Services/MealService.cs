@@ -14,12 +14,33 @@ namespace CaloriesTracker.Services
         private readonly Supabase.Client _supabase;
         private readonly IJSRuntime _js;
         private readonly AuthService _authService;
+        public event Action<DateTime>? OnDateChanged;
+        public event Action? OnMealsUpdated;
+
+        private DateTime _selectedDate = DateTime.Today;
+        public DateTime SelectedDate
+        {
+            get => _selectedDate;
+            set
+            {
+                if (_selectedDate != value)
+                {
+                    _selectedDate = value;
+                    OnDateChanged?.Invoke(value);
+                }
+            }
+        }
 
         public MealService(Supabase.Client supabase, IJSRuntime js, AuthService authService)
         {
             _supabase = supabase;
             _js = js;
             _authService = authService;
+        }
+
+        public void NotifyMealsUpdated()
+        {
+            OnMealsUpdated?.Invoke();
         }
 
         public async Task<List<Meal>> GetMealsAsync()

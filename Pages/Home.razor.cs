@@ -15,7 +15,7 @@ namespace CaloriesTracker.Pages
         private List<Meal> meals = new();
         private Meal inputMeal = new();
         private int totalCalories;
-        private int dailyCaloriesGoal;
+        private int dailyCaloriesGoal = 1200;
         private bool showMealForm;
         private DateTime selectedDate = DateTime.Today;
 
@@ -31,6 +31,18 @@ namespace CaloriesTracker.Pages
             totalCalories = meals
                 .Where(x => x.Date.Date == selectedDate.Date)
                 .Sum(x => x.Calories);
+
+            MealService.OnDateChanged += date =>
+             {
+                 selectedDate = date;
+                 OnDateChanged();
+                 InvokeAsync(StateHasChanged);
+             };
+        }
+
+        public void Dispose()
+        {
+            MealService.OnDateChanged -= null;
         }
 
         private async Task UpsertMeal()
@@ -47,6 +59,7 @@ namespace CaloriesTracker.Pages
 
             await MealService.UpsertMealAsync(mealToUpsert);
             await OnInitializedAsync();
+            MealService.NotifyMealsUpdated();
         }
 
         private void Clear()
@@ -65,6 +78,7 @@ namespace CaloriesTracker.Pages
 
             await MealService.DeleteMealAsync(meal.Id);
             await OnInitializedAsync();
+            MealService.NotifyMealsUpdated();
         }
 
         private async Task EditMealAsync(Meal meal)

@@ -5,6 +5,7 @@
 @inject Supabase.Client SupabaseClient
 @inject IJSRuntime JS
 @inject AuthService AuthService
+@inject MealService MealService
 
 
 <h3>Login or Sign Up</h3>
@@ -41,6 +42,7 @@ else
             {
                 await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
                 user = result.User;
+                MealService.NotifyMealsUpdated();
             }
         }
         catch (Exception ex)
@@ -59,6 +61,7 @@ else
             {
                 await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
                 user = result.User;
+                MealService.NotifyMealsUpdated();
             }
             else
             {
@@ -76,5 +79,6 @@ else
     {
         await AuthService.LogoutAsync();
         user = null;
+        MealService.NotifyMealsUpdated();
     }
 }

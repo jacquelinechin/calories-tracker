@@ -1,0 +1,181 @@
+﻿@using CaloriesTracker.Models
+@using CaloriesTracker.Services
+
+<div class="calendar mx-3 pb-1 mb-3">
+    <div class="calendar-header">
+        <button @onclick="PrevMonth">←</button>
+        <span>@currentMonth.ToString("MMM yyyy")</span>
+        <button @onclick="NextMonth">→</button>
+    </div>
+
+    <div class="calendar-grid">
+        @foreach (var week in Enum.GetValues<DayOfWeek>())
+        {
+            <div class="calendar-week">
+                <div class="day">@week.ToString().Substring(0,3).ToUpper()</div>
+            </div>
+        }
+
+        @foreach (var week in Enum.GetValues<DayOfWeek>())
+        {
+            if (week < daysInMonth.FirstOrDefault().DayOfWeek)
+            {
+                <div></div>
+            }
+        }
+
+        @foreach (var day in daysInMonth)
+        {
+            var total = meals.Where(x => x.Date.Date == day.Date).Sum(x => x.Calories);
+            var isToday = day.Date == DateTime.Today;
+
+            <div class="calendar-cell @(isToday ? "today" : "") @GetColor(total)" @onclick="() => MealService.SelectedDate = day">
+                <div class="day">@day.Day</div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Inject]
+    public required MealService MealService { get; set; }
+    private DateTime currentMonth = DateTime.Today;
+    private List<DateTime> daysInMonth = new();
+    private List<Meal> meals = new();
+    private int dailyCaloriesGoal = 1200;
+
+    protected override async Task OnInitializedAsync()
+    {
+        meals = await MealService.GetMealsAsync();
+        GenerateCalendar();
+
+        MealService.OnMealsUpdated += HandleMealsUpdated;
+    }
+
+    public void Dispose()
+    {
+        MealService.OnMealsUpdated -= HandleMealsUpdated;
+    }
+
+    private async void HandleMealsUpdated()
+    {
+        meals = await MealService.GetMealsAsync();
+        GenerateCalendar();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void GenerateCalendar()
+    {
+        var start = new DateTime(currentMonth.Year, currentMonth.Month, 1);
+        var end = start.AddMonths(1).AddDays(-1);
+
+        daysInMonth = Enumerable.Range(0, (end - start).Days + 1)
+            .Select(offset => start.AddDays(offset))
+            .ToList();
+    }
+
+    private void NextMonth()
+    {
+        currentMonth = currentMonth.AddMonths(1);
+        GenerateCalendar();
+    }
+
+    private void PrevMonth()
+    {
+        currentMonth = currentMonth.AddMonths(-1);
+        GenerateCalendar();
+    }
+
+    private string GetColor(int total) =>
+    total switch
+    {
+        <= 0 => "",
+        _ when total >= dailyCaloriesGoal => "bg-green",
+        _ => "bg-yellow"
+    };
+}
+
+<style>
+    /* ===========================
+       Calendar Layout
+       =========================== */
+    .calendar {
+        max-width: 500px;
+        margin: 0 auto;
+        color: white;
+        background-color: rgba(255, 255, 255, 0.37);
+        border-radius: 4px;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+        .calendar-header button {
+            color: white;
+            background-color: transparent;
+            border: none;
+            border-radius: 8px;
+            padding: 0.3rem 0.6rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+            .calendar-header button:hover {
+                background-color: rgba(255, 255, 255, 0.37);
+            }
+
+    /* ===========================
+       Calendar Grid
+       =========================== */
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+    }
+
+    .calendar-week {
+        text-align: center;
+        font-size: 0.5rem;
+    }
+
+    .calendar-cell {
+        border-radius: 8px;
+        text-align: center;
+        transition: transform 0.15s, box-shadow 0.15s;
+        cursor: pointer;
+    }
+
+        .calendar-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Highlight today's date */
+        .calendar-cell.today {
+            border: 2px solid #0078d7;
+        }
+
+        /* Day number and calories text */
+        .calendar-cell .day {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+    /* ===========================
+       Color Levels (based on total calories)
+       =========================== */
+    .bg-green {
+        background-color: #8ab395;
+    }
+
+    .bg-yellow {
+        background-color: #b3a36c;
+    }
+
+</style>
