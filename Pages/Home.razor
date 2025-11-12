@@ -3,9 +3,13 @@
 
 <div class="calendar pb-1 mb-3">
     <div class="calendar-header">
-        <button @onclick="PrevMonth">←</button>
+        <button class="btn btn-outline-secondary icon-button" title="Previous Month" @onclick="PrevMonth">
+            <i class="bi bi-chevron-left"></i>
+        </button>
         <span>@currentMonth.ToString("MMM yyyy")</span>
-        <button @onclick="NextMonth">→</button>
+        <button class="btn btn-outline-secondary icon-button" title="Next Month" @onclick="NextMonth">
+            <i class="bi bi-chevron-right"></i>
+        </button>
     </div>
 
     <div class="calendar-grid">
@@ -341,18 +345,18 @@
         font-size: 0.9rem;
     }
 
-        .calendar-header button {
+        /* .calendar-header button {
             background-color: transparent;
             border: none;
             border-radius: 8px;
             padding: 0.3rem 0.6rem;
             cursor: pointer;
             transition: background-color 0.2s;
-        }
+        } */
 
-            .calendar-header button:hover {
+            /* .calendar-header button:hover {
                 background-color: rgba(0, 0, 0, 0.37);
-            }
+            } */
 
     /* ===========================
            Calendar Grid

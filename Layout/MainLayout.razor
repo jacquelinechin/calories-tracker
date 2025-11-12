@@ -1,4 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@using CaloriesTracker.Services
+@inherits LayoutComponentBase
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -6,7 +10,20 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="login">Login</a>
+            @if (user != null)
+            {
+                <span class="user-font">@user.Email</span>
+                <button class="btn btn btn-outline-secondary icon-button ms-3" title="Logout" @onclick="Logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            }
+            else
+            {
+                <span class="user-font">Guest</span>
+                <a href="login" class="btn btn-outline-secondary icon-button" title="Login">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                </a>
+            }
         </div>
 
         <article class="content px-4">
@@ -14,3 +31,41 @@
         </article>
     </main>
 </div>
+
+<style>
+    .user-font {
+        font-size: 0.9rem;
+    }
+    .icon-button {
+        padding: 1px 6px;
+        border: none;
+    }
+</style>
+
+@code {
+    private Supabase.Gotrue.User? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await AuthService.GetCurrentUserAsync();
+        AuthService.OnAuthStateChanged += HandleAuthStateChanged;
+    }
+
+    private async Task HandleAuthStateChanged()
+    {
+        user = await AuthService.GetCurrentUserAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        user = null;
+        NavigationManager.NavigateTo(NavigationManager.BaseUri, forceLoad: true);
+    }
+
+    public void Dispose()
+    {
+        AuthService.OnAuthStateChanged -= HandleAuthStateChanged;
+    }
+}

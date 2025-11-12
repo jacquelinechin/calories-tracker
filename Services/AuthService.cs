@@ -8,6 +8,7 @@ namespace CaloriesTracker.Services
     {
         private readonly Supabase.Client _supabase;
         private readonly IJSRuntime _js;
+        public event Func<Task>? OnAuthStateChanged;
 
         public AuthService(Supabase.Client supabase, IJSRuntime js)
         {
@@ -53,10 +54,45 @@ namespace CaloriesTracker.Services
 
         public bool IsLoggedIn => _supabase.Auth.CurrentSession != null;
 
+        public async Task<User?> LoginAsync(string email, string password)
+        {
+            var result = await _supabase.Auth.SignIn(email, password);
+            if (result != null && result.AccessToken != null)
+            {
+                await _js.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
+                await NotifyAuthStateChanged();
+                return result.User;
+            }
+            return null;
+        }
+
+        public async Task<User?> SignUpAsync(string email, string password)
+        {
+            var result = await _supabase.Auth.SignUp(email, password);
+            if (result != null && result.AccessToken != null)
+            {
+                await _js.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
+                await NotifyAuthStateChanged();
+                return result.User;
+            }
+            else
+            {
+                await _js.InvokeVoidAsync("alert", "Error: User already registered");
+                return null;
+            }
+        }
+
         public async Task LogoutAsync()
         {
             await _supabase.Auth.SignOut();
             await _js.InvokeVoidAsync("localStorage.removeItem", "supabase_session");
+            await NotifyAuthStateChanged();
+        }
+
+        private async Task NotifyAuthStateChanged()
+        {
+            if (OnAuthStateChanged != null)
+                await OnAuthStateChanged.Invoke();
         }
     }
 }

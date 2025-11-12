@@ -39,13 +39,9 @@ else
     {
         try
         {
-            var result = await SupabaseClient.Auth.SignIn(email, password);
-            if (result != null && result.AccessToken != null)
-            {
-                await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
-                user = result.User;
+            user = await AuthService.LoginAsync(email, password);
+            if (user != null)
                 NavigationManager.NavigateTo(NavigationManager.BaseUri);
-            }
         }
         catch (Exception ex)
         {
@@ -58,17 +54,9 @@ else
     {
         try
         {
-            var result = await SupabaseClient.Auth.SignUp(email, password);
-            if (result != null && result.AccessToken != null)
-            {
-                await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
-                user = result.User;
+            user = await AuthService.SignUpAsync(email, password);
+            if (user != null)
                 NavigationManager.NavigateTo(NavigationManager.BaseUri);
-            }
-            else
-            {
-                await JS.InvokeVoidAsync("alert", "Error: User already registered");
-            }
         }
         catch (Exception ex)
         {
