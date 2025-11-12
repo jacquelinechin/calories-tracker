@@ -1,6 +1,42 @@
 ﻿@page "/"
 @using CaloriesTracker.Models
 
+<div class="calendar pb-1 mb-3">
+    <div class="calendar-header">
+        <button @onclick="PrevMonth">←</button>
+        <span>@currentMonth.ToString("MMM yyyy")</span>
+        <button @onclick="NextMonth">→</button>
+    </div>
+
+    <div class="calendar-grid">
+        @foreach (var week in Enum.GetValues<DayOfWeek>())
+        {
+            <div class="calendar-week">
+                <div class="day">@week.ToString().Substring(0, 3).ToUpper()</div>
+            </div>
+        }
+
+        @foreach (var week in Enum.GetValues<DayOfWeek>())
+        {
+            if (week < daysInMonth.FirstOrDefault().DayOfWeek)
+            {
+                <div></div>
+            }
+        }
+
+        @foreach (var day in daysInMonth)
+        {
+            var total = meals.Where(x => x.Date.Date == day.Date).Sum(x => x.Calories);
+            var isToday = day.Date == DateTime.Today;
+
+            <div class="calendar-cell @(isToday ? "today" : "") @(day.Date == selectedDate.Date ? "selected" : "") @GetColor(total)" @onclick="() => OnDateChanged(day)">
+                <div class="day">@day.Day</div>
+                <div class="calories">@(total > 0 ? total + " kcal" : "")</div>
+            </div>
+        }
+    </div>
+</div>
+
 <div class="meal-card-row">
     <h3 id="meal-form">@selectedDate.ToString("dd MMM yyyy")</h3>
 
@@ -181,7 +217,7 @@
     }
 </div>
 
-<p class="mt-3">Total calories consumed today: @totalCalories kcal / @dailyCaloriesGoal</p>
+<p class="mt-3">Total calories: @totalCalories kcal / @dailyCaloriesGoal kcal</p>
 
 <style>
     .food-icon {
@@ -287,37 +323,94 @@
     .validation-message {
         font-size: 14px;
     }
-</style>
 
-@* <style>
-    .slider {
-        width: 100%;
-        accent-color: #10b981; /* Tailwind emerald green */
-        cursor: pointer;
+    /* ===========================
+           Calendar Layout
+        =========================== */
+    .calendar {
+        max-width: 500px;
+        margin: 0 auto;
     }
 
-    /* Optional fancy gradient background */
-    .slider::-webkit-slider-runnable-track {
-        height: 8px;
-        background: linear-gradient(to right,
-            #22c55e 0%,    /* green */
-            #eab308 50%,   /* yellow */
-            #ef4444 100%); /* red */
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+        .calendar-header button {
+            background-color: transparent;
+            border: none;
+            border-radius: 8px;
+            padding: 0.3rem 0.6rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+            .calendar-header button:hover {
+                background-color: rgba(0, 0, 0, 0.37);
+            }
+
+    /* ===========================
+           Calendar Grid
+        =========================== */
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+    }
+
+    .calendar-week {
+        text-align: center;
+        font-size: 0.5rem;
+    }
+
+    .calendar-cell {
         border-radius: 8px;
+        text-align: center;
+        transition: transform 0.15s, box-shadow 0.15s;
+        cursor: pointer;
+        min-height: 2.5rem;
+        margin: 2px;
     }
 
-    .slider::-webkit-slider-thumb {
-        appearance: none;
-        height: 16px;
-        width: 16px;
-        border-radius: 50%;
-        background: white;
-        border: 2px solid #10b981;
-        margin-top: -4px;
-        transition: background 0.2s;
+        .calendar-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Highlight today's date */
+        .calendar-cell.today {
+            font-weight: 600;
+        }
+
+        .calendar-cell.selected {
+            border: 2px solid #0078d7;
+            margin: 0;
+        }
+
+        /* Day number and calories text */
+        .calendar-cell .day {
+            font-size: 0.9rem;
+        }
+
+        .calendar-cell .calories {
+            font-weight: 400;
+            font-size: 0.7rem;
+        }
+
+    /* ===========================
+           Color Levels (based on total calories)
+        =========================== */
+    .bg-green {
+        background-color: #acffac;
     }
 
-    .slider::-webkit-slider-thumb:hover {
-        background: #10b981;
+    .bg-yellow {
+        background-color: #ffffac;
     }
-</style> *@
+
+</style>

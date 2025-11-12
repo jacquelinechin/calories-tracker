@@ -24,6 +24,8 @@ else
 }
 
 @code {
+    [Inject]
+    public required NavigationManager NavigationManager { get; set; }
     private Supabase.Gotrue.User? user;
     private string email = "";
     private string password = "";
@@ -42,7 +44,7 @@ else
             {
                 await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
                 user = result.User;
-                MealService.NotifyMealsUpdated();
+                NavigationManager.NavigateTo("/");
             }
         }
         catch (Exception ex)
@@ -61,7 +63,7 @@ else
             {
                 await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
                 user = result.User;
-                MealService.NotifyMealsUpdated();
+                NavigationManager.NavigateTo("/");
             }
             else
             {
@@ -79,6 +81,5 @@ else
     {
         await AuthService.LogoutAsync();
         user = null;
-        MealService.NotifyMealsUpdated();
     }
 }
