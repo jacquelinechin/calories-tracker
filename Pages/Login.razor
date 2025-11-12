@@ -44,7 +44,7 @@ else
             {
                 await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
                 user = result.User;
-                NavigationManager.NavigateTo("");
+                NavigationManager.NavigateTo(NavigationManager.BaseUri);
             }
         }
         catch (Exception ex)
@@ -63,7 +63,7 @@ else
             {
                 await JS.InvokeVoidAsync("localStorage.setItem", "supabase_session", JsonSerializer.Serialize(result));
                 user = result.User;
-                NavigationManager.NavigateTo("");
+                NavigationManager.NavigateTo(NavigationManager.BaseUri);
             }
             else
             {
