@@ -1,0 +1,71 @@
+﻿@page "/settings"
+
+<h4>Settings</h4>
+
+@if (user is not null)
+{
+    <div class="setting-card-container">
+        <div class="setting-card">
+            <strong>User Account</strong>
+            <div class="setting-card-row">
+                <label>@user.Email</label>
+                <button class="btn btn-secondary btn-sm" @onclick="HandleLogoutAsync">Logout</button>
+            </div>
+        </div>
+
+        <div class="setting-card">
+            <strong>Data Storage</strong>
+            <div class="setting-card-row">
+                <label>Supabase</label>
+                <button class="btn btn-danger btn-sm" @onclick="DeleteDataAsync">Delete All Data</button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="setting-card-container">
+        <div class="setting-card">
+            <strong>User Account</strong>
+            <div>
+                <label>Guest</label>
+            </div>
+            <div>
+                <input @bind="email" placeholder="Email" />
+                <input @bind="password" type="password" placeholder="Password" />
+            </div>
+            <button class="btn btn-primary btn-sm" @onclick="HandleLoginAsync">Login</button>
+            <button class="btn btn-secondary btn-sm" @onclick="HandleSignUpAsync">Sign Up</button>
+        </div>
+
+        <div class="setting-card">
+            <strong>Data Storage</strong>
+            <div class="setting-card-row">
+                <label>Local Storage</label>
+                <button class="btn btn-danger btn-sm" @onclick="DeleteDataAsync">Delete All Data</button>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .setting-card-container {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 1rem;
+    }
+
+    .setting-card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+
+    .setting-card-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1.5rem;
+    }
+</style>

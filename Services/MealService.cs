@@ -102,6 +102,22 @@ namespace CaloriesTracker.Services
             }
         }
 
+        public async Task DeleteAllUserMealAsync()
+        {
+            var user = await _authService.GetCurrentUserAsync();
+
+            if (user != null)
+            {
+                await _supabase.From<Meal>()
+                    .Filter("user_id", Operator.Equals, user.Id)
+                    .Delete();
+            }
+            else
+            {
+                await _js.InvokeVoidAsync("localStorage.removeItem", "guest_meals");
+            }
+        }
+
         public static MealLocal ToLocal(Meal meal) => new MealLocal
         {
             Id = meal.Id,
