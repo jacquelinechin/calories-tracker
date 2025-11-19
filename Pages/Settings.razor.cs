@@ -2,6 +2,7 @@
 using CaloriesTracker.Models;
 using CaloriesTracker.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using System.Text.Json;
 
@@ -15,14 +16,19 @@ namespace CaloriesTracker.Pages
         public required AuthService AuthService { get; set; }
         [Inject]
         public required MealService MealService { get; set; }
+        [Inject]
+        public required UserSettingsService UserSettingsService { get; set; }
 
         private Supabase.Gotrue.User? user;
         private string email = "";
         private string password = "";
+        private UserSettings inputUserSettings = new();
+        private EditForm? form;
 
         protected override async Task OnInitializedAsync()
         {
             user = await AuthService.GetCurrentUserAsync();
+            inputUserSettings.DailyCalorieGoal = await UserSettingsService.GetDailyCalorieGoalAsync();
         }
 
         private async Task HandleLoginAsync()
@@ -30,6 +36,8 @@ namespace CaloriesTracker.Pages
             try
             {
                 user = await AuthService.LoginAsync(email, password);
+                inputUserSettings.DailyCalorieGoal = await UserSettingsService.GetDailyCalorieGoalAsync();
+                form!.EditContext!.Validate();
             }
             catch (Exception ex)
             {
@@ -43,6 +51,8 @@ namespace CaloriesTracker.Pages
             try
             {
                 user = await AuthService.SignUpAsync(email, password);
+                inputUserSettings.DailyCalorieGoal = await UserSettingsService.GetDailyCalorieGoalAsync();
+                form!.EditContext!.Validate();
             }
             catch (Exception ex)
             {
@@ -55,6 +65,8 @@ namespace CaloriesTracker.Pages
         {
             await AuthService.LogoutAsync();
             user = null;
+            inputUserSettings.DailyCalorieGoal = await UserSettingsService.GetDailyCalorieGoalAsync();
+            form!.EditContext!.Validate();
         }
 
         private async Task DeleteDataAsync()
@@ -64,6 +76,13 @@ namespace CaloriesTracker.Pages
                 return;
 
             await MealService.DeleteAllUserMealAsync();
+        }
+
+        private async Task SaveDailyCaloriesGoalAsync()
+        {
+            var success = await UserSettingsService.UpsertDailyCalorieGoalAsync(inputUserSettings.DailyCalorieGoal ?? 0);
+            if (success)
+                await JS.InvokeVoidAsync("alert", "Settings saved.");
         }
     }
 }

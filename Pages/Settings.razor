@@ -2,70 +2,61 @@
 
 <h4>Settings</h4>
 
+<div class="setting-card-container">
 @if (user is not null)
 {
-    <div class="setting-card-container">
-        <div class="setting-card">
-            <strong>User Account</strong>
-            <div class="setting-card-row">
-                <label>@user.Email</label>
-                <button class="btn btn-secondary btn-sm" @onclick="HandleLogoutAsync">Logout</button>
-            </div>
+    <div class="setting-card">
+        <strong>User Account</strong>
+        <div class="setting-card-row">
+            <label>@user.Email</label>
+            <button class="btn btn-secondary btn-sm" @onclick="HandleLogoutAsync">Logout</button>
         </div>
+    </div>
 
-        <div class="setting-card">
-            <strong>Data Storage</strong>
-            <div class="setting-card-row">
-                <label>Supabase</label>
-                <button class="btn btn-danger btn-sm" @onclick="DeleteDataAsync">Delete All Data</button>
-            </div>
+    <div class="setting-card">
+        <strong>Data Storage</strong>
+        <div class="setting-card-row">
+            <label>Supabase</label>
+            <button class="btn btn-danger btn-sm" @onclick="DeleteDataAsync">Delete All Data</button>
         </div>
     </div>
 }
 else
 {
-    <div class="setting-card-container">
-        <div class="setting-card">
-            <strong>User Account</strong>
-            <div>
-                <label>Guest</label>
-            </div>
-            <div>
-                <input @bind="email" placeholder="Email" />
-                <input @bind="password" type="password" placeholder="Password" />
-            </div>
+    <div class="setting-card">
+        <strong>User Account</strong>
+        <div>
+            <label>Guest</label>
+        </div>
+        <InputText class="form-control my-2" @bind-Value="email" placeholder="Email" />
+        <InputText class="form-control my-2" @bind-Value="password" placeholder="Password" type="password" />
+        <div class="form-button-group">
             <button class="btn btn-primary btn-sm" @onclick="HandleLoginAsync">Login</button>
             <button class="btn btn-secondary btn-sm" @onclick="HandleSignUpAsync">Sign Up</button>
         </div>
+    </div>
 
-        <div class="setting-card">
-            <strong>Data Storage</strong>
-            <div class="setting-card-row">
-                <label>Local Storage</label>
-                <button class="btn btn-danger btn-sm" @onclick="DeleteDataAsync">Delete All Data</button>
-            </div>
+    <div class="setting-card">
+        <strong>Data Storage</strong>
+        <div class="setting-card-row">
+            <label>Local Storage</label>
+            <button class="btn btn-danger btn-sm" @onclick="DeleteDataAsync">Delete All Data</button>
         </div>
     </div>
 }
+    <div class="setting-card">
+        <strong>Daily Calorie Goal</strong>
+        <EditForm Model="inputUserSettings" OnValidSubmit="SaveDailyCaloriesGoalAsync" @ref="form">
+            <DataAnnotationsValidator />
+            <div class="setting-card-row">
+                <div class="d-flex align-items-center gap-2">
+                    <InputNumber class="form-control" @bind-Value="inputUserSettings.DailyCalorieGoal" />
+                    <label class="font-caption">kcal</label>
+                </div>
+                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+            </div>
+            <ValidationMessage For="@(() => inputUserSettings.DailyCalorieGoal)" />
+        </EditForm>
+    </div>
+</div>
 
-<style>
-    .setting-card-container {
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-        gap: 1rem;
-    }
-
-    .setting-card {
-        border: 1px solid #dee2e6;
-        border-radius: 0.5rem;
-        padding: 1rem;
-    }
-
-    .setting-card-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1.5rem;
-    }
-</style>

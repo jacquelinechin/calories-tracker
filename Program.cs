@@ -28,6 +28,7 @@ await supabase.InitializeAsync();
 builder.Services.AddSingleton(supabase);
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<MealService>();
+builder.Services.AddScoped<UserSettingsService>();
 
 var js = builder.Services.BuildServiceProvider().GetRequiredService<IJSRuntime>();
 

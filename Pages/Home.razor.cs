@@ -11,6 +11,8 @@ namespace CaloriesTracker.Pages
         [Inject]
         public required MealService MealService { get; set; }
         [Inject]
+        public required UserSettingsService UserSettingsService { get; set; }
+        [Inject]
         public required IJSRuntime JS {  get; set; }
 
 
@@ -20,7 +22,7 @@ namespace CaloriesTracker.Pages
         private List<Meal> meals = new();
         private Meal inputMeal = new();
         private int totalCalories;
-        private int dailyCaloriesGoal = 1200;
+        private int dailyCalorieGoal;
         private bool showMealForm;
         private DateTime selectedDate = DateTime.Today;
 
@@ -32,6 +34,7 @@ namespace CaloriesTracker.Pages
             };
 
             meals = await MealService.GetMealsAsync();
+            dailyCalorieGoal = await UserSettingsService.GetDailyCalorieGoalAsync();
 
             GenerateCalendar();
 
@@ -124,7 +127,7 @@ namespace CaloriesTracker.Pages
         total switch
         {
             <= 0 => "",
-            _ when total >= dailyCaloriesGoal => "bg-green",
+            _ when total >= dailyCalorieGoal => "bg-green",
             _ => "bg-yellow"
         };
     }
