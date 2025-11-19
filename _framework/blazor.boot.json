@@ -1,10 +1,10 @@
 {
   "mainAssemblyName": "CaloriesTracker",
   "resources": {
-    "hash": "sha256-pmdsso/Zdxp+LpqC1CEBL8gdBmLeJzqTHrSR//NWVNA=",
+    "hash": "sha256-wG2+YEqiab5i++fWDO9edhZexuymxzjfciscC/JT2xc=",
     "fingerprinting": {
       "Blazored.LocalStorage.12n6dz54qr.wasm": "Blazored.LocalStorage.wasm",
-      "Microsoft.AspNetCore.Components.v5vu60hvgw.wasm": "Microsoft.AspNetCore.Components.wasm",
+      "Microsoft.AspNetCore.Components.8m6ig24088.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Forms.4pi680o7gk.wasm": "Microsoft.AspNetCore.Components.Forms.wasm",
       "Microsoft.AspNetCore.Components.Web.3y7u14t394.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
       "Microsoft.AspNetCore.Components.WebAssembly.nvr1tj7rwf.wasm": "Microsoft.AspNetCore.Components.WebAssembly.wasm",
@@ -48,7 +48,7 @@
       "System.ComponentModel.n2b8k31o2o.wasm": "System.ComponentModel.wasm",
       "System.Console.zy6u8fm2zy.wasm": "System.Console.wasm",
       "System.Data.Common.udjk1tc1eu.wasm": "System.Data.Common.wasm",
-      "System.Diagnostics.DiagnosticSource.p9xljpzvxh.wasm": "System.Diagnostics.DiagnosticSource.wasm",
+      "System.Diagnostics.DiagnosticSource.n1y6icprwn.wasm": "System.Diagnostics.DiagnosticSource.wasm",
       "System.Diagnostics.TraceSource.kjo1z9jpg3.wasm": "System.Diagnostics.TraceSource.wasm",
       "System.Diagnostics.Tracing.8c7oh1osuc.wasm": "System.Diagnostics.Tracing.wasm",
       "System.Drawing.Primitives.um68xmouvq.wasm": "System.Drawing.Primitives.wasm",
@@ -59,7 +59,7 @@
       "System.Linq.Expressions.biv98ji9i0.wasm": "System.Linq.Expressions.wasm",
       "System.Linq.by4ba0oaa8.wasm": "System.Linq.wasm",
       "System.Memory.pf5a3apgyk.wasm": "System.Memory.wasm",
-      "System.Net.Http.5eex93s8fh.wasm": "System.Net.Http.wasm",
+      "System.Net.Http.kqksaq46nj.wasm": "System.Net.Http.wasm",
       "System.Net.NetworkInformation.gqkc298rf3.wasm": "System.Net.NetworkInformation.wasm",
       "System.Net.Ping.oewtlayn5l.wasm": "System.Net.Ping.wasm",
       "System.Net.Primitives.lpxry6ls7u.wasm": "System.Net.Primitives.wasm",
@@ -77,7 +77,7 @@
       "System.Runtime.Numerics.gf6whhbvw0.wasm": "System.Runtime.Numerics.wasm",
       "System.Runtime.Serialization.Formatters.xom0qwumxc.wasm": "System.Runtime.Serialization.Formatters.wasm",
       "System.Runtime.Serialization.Primitives.lqowotcine.wasm": "System.Runtime.Serialization.Primitives.wasm",
-      "System.Runtime.57pvvyhe91.wasm": "System.Runtime.wasm",
+      "System.Runtime.1uia5j99az.wasm": "System.Runtime.wasm",
       "System.Security.Claims.wlbfry6grz.wasm": "System.Security.Claims.wasm",
       "System.Security.Cryptography.1eu1jyzjw6.wasm": "System.Security.Cryptography.wasm",
       "System.Text.Encoding.Extensions.r3tvss3oy9.wasm": "System.Text.Encoding.Extensions.wasm",
@@ -93,8 +93,8 @@
       "System.Xml.XDocument.rq3uoqeade.wasm": "System.Xml.XDocument.wasm",
       "System.t4d4s3f398.wasm": "System.wasm",
       "netstandard.r4qhdad01r.wasm": "netstandard.wasm",
-      "System.Private.CoreLib.syobqzzwie.wasm": "System.Private.CoreLib.wasm",
-      "CaloriesTracker.tot6e6vw3q.wasm": "CaloriesTracker.wasm",
+      "System.Private.CoreLib.l0462ijxm4.wasm": "System.Private.CoreLib.wasm",
+      "CaloriesTracker.z3dpufa6bx.wasm": "CaloriesTracker.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.noby4tlk4d.js": "dotnet.native.js",
       "dotnet.native.qe75a9vfqn.wasm": "dotnet.native.wasm",
@@ -119,11 +119,11 @@
     },
     "coreAssembly": {
       "System.Runtime.InteropServices.JavaScript.7u81f8olp1.wasm": "sha256-/zEYK1VQFpcGHE49otyHuuLSnHHmI8k4PJBBu8zEx3g=",
-      "System.Private.CoreLib.syobqzzwie.wasm": "sha256-JEnYG4sYFH5jcYTMvR2CDbAsHxVKd1BP51dXHBRVmcs="
+      "System.Private.CoreLib.l0462ijxm4.wasm": "sha256-1ZPBYb+rr7pzGfLvcwp1sbhD61P7hMP7Akk4R0Q4GZo="
     },
     "assembly": {
       "Blazored.LocalStorage.12n6dz54qr.wasm": "sha256-OaMAAd5n7ORfyur5e3QIyEVKJ76MKIvwbg7/icnnYcU=",
-      "Microsoft.AspNetCore.Components.v5vu60hvgw.wasm": "sha256-vXBGdmUnagePBU5q/Q8/UZN6ABiNU4LPVrltuVn02dU=",
+      "Microsoft.AspNetCore.Components.8m6ig24088.wasm": "sha256-AHZfR0qPxz2N6AgM9AeXjE7rimsElqisfmkMmoqo68c=",
       "Microsoft.AspNetCore.Components.Forms.4pi680o7gk.wasm": "sha256-2BMRt/nioS7vdbDhsLWFPbqusRi0Q9olDRXNkOOEbwo=",
       "Microsoft.AspNetCore.Components.Web.3y7u14t394.wasm": "sha256-u0QChLBQK+kesCg4EosofeFKFWQjKaYO0O3LXDJ9Hes=",
       "Microsoft.AspNetCore.Components.WebAssembly.nvr1tj7rwf.wasm": "sha256-Y9y4a637WBoDa08GX7Qxx63oDFsCVE/4v8oZCvLkKTo=",
@@ -167,7 +167,7 @@
       "System.ComponentModel.n2b8k31o2o.wasm": "sha256-D3qdQr+y+spdoDu0Q5Tr+qK6IHxI9v2AjMvstbB89Z0=",
       "System.Console.zy6u8fm2zy.wasm": "sha256-Nf3qLziP8IfU+holOcrB+dvsd70IlJLzQP0WxyNEyDY=",
       "System.Data.Common.udjk1tc1eu.wasm": "sha256-3ivaG3NdaZGVfqF2Jj5Ea/+sbDQdDRKNOJeOOsgaSmg=",
-      "System.Diagnostics.DiagnosticSource.p9xljpzvxh.wasm": "sha256-rYLeq5mRwGIQWJXArORCNoFainIbw5/LONMj8+lk5TM=",
+      "System.Diagnostics.DiagnosticSource.n1y6icprwn.wasm": "sha256-20MnV/nj/3JiyysUpagXdQ2XWsHPvhmacVcYcP0PUg0=",
       "System.Diagnostics.TraceSource.kjo1z9jpg3.wasm": "sha256-gJbPUfWmDdHwCUvgqsX4zWm2dkoAIyyRhxI/L9Na2jk=",
       "System.Diagnostics.Tracing.8c7oh1osuc.wasm": "sha256-KBA2DfOPQyhzDoYlEAHY3WShxhPP4qfevjNrtrQBeOA=",
       "System.Drawing.Primitives.um68xmouvq.wasm": "sha256-lqyZ72qhFrUryPd96z26GGtM3p3uH89cwmGxHKrPKbE=",
@@ -178,7 +178,7 @@
       "System.Linq.Expressions.biv98ji9i0.wasm": "sha256-PWTQkk1CRJDjOZWeKYMwKbzLrQY56oUqMPWqR2s62TI=",
       "System.Linq.by4ba0oaa8.wasm": "sha256-LchVGgNbDWXIuiaOLnbDgr7Z/S1Al3Uo2hYkGx8Bpbw=",
       "System.Memory.pf5a3apgyk.wasm": "sha256-BRU9hQ5yn+8XalZEseaFmTagJDNGMApQfGhCYlcdyLU=",
-      "System.Net.Http.5eex93s8fh.wasm": "sha256-HRxZR3UNPC8E0KhPF/sfmxpI3QzKpkLi3PwW9aVa2jY=",
+      "System.Net.Http.kqksaq46nj.wasm": "sha256-/AlepU+u6Mdeqd/20AlfMikx3tCAhdIKjk1Gr7md/ZM=",
       "System.Net.NetworkInformation.gqkc298rf3.wasm": "sha256-CMbvM2xT/Jeq64rsCRcV1vQEhK6xRC+1672W0+UcPFs=",
       "System.Net.Ping.oewtlayn5l.wasm": "sha256-UMba4K8/+i9fCA3mdrwXx7KrTCSZcTnolMOhtV6pumQ=",
       "System.Net.Primitives.lpxry6ls7u.wasm": "sha256-aW3l4z2WgHRm7OUbUEj+dhZWer0Fq4MGRO/U5IupUbE=",
@@ -195,7 +195,7 @@
       "System.Runtime.Numerics.gf6whhbvw0.wasm": "sha256-jO0+gCsv/PZqq6l9GO4M3LvcUgDT4AJBivW+SV2yM0s=",
       "System.Runtime.Serialization.Formatters.xom0qwumxc.wasm": "sha256-4aydm09WaY1TnJLjwJW2n6T8qDvP+6AHXsP9p/2uRRE=",
       "System.Runtime.Serialization.Primitives.lqowotcine.wasm": "sha256-w87o1KEfEVCglV6QY4dYOmQr8pzuyE7rnXBJAjNU0Ak=",
-      "System.Runtime.57pvvyhe91.wasm": "sha256-UWifXSI9O+YJ6Uwb86z/R79RjvUpe3ttMKAM3pbhYis=",
+      "System.Runtime.1uia5j99az.wasm": "sha256-J2FAAPazl4X2maYj6J2qUrgXYmhenTEtW3y742rwSNU=",
       "System.Security.Claims.wlbfry6grz.wasm": "sha256-hAueTImo6zEa1FyfzJ0D8P45QoZPxze/9uxbYdw/BLk=",
       "System.Security.Cryptography.1eu1jyzjw6.wasm": "sha256-5wTY7RYYPTrF0WdJbOtAnQLDig3GknGLpXYQxS3lHnM=",
       "System.Text.Encoding.Extensions.r3tvss3oy9.wasm": "sha256-F2EnIoFynO9FTiVa0TLwVvbJ9bn+a4MGhRQpzzxOOSs=",
@@ -211,7 +211,7 @@
       "System.Xml.XDocument.rq3uoqeade.wasm": "sha256-jXHocYVCS/ThppEaX8pR/Ky4h/AvzicYqHMda1gq83I=",
       "System.t4d4s3f398.wasm": "sha256-fVP2BxRRKpBA0PmBbKxmO45bXDrAXVn1GthlDclLbeU=",
       "netstandard.r4qhdad01r.wasm": "sha256-dfw6cIQG8iC4qSw+q6GqxbHQrxDrfnjbvdUifS0ErAg=",
-      "CaloriesTracker.tot6e6vw3q.wasm": "sha256-M44uBlx6XU6ehDxNcZKla1LhvRWUPm2p/RYfDhS39u8="
+      "CaloriesTracker.z3dpufa6bx.wasm": "sha256-n6gtK+bfRjdEudKUG7zGTL5yqnC+xTACT/4dGMWbzEY="
     }
   },
   "cacheBootResources": true,
