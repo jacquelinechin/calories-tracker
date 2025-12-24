@@ -3,44 +3,34 @@
 @inject AuthService AuthService
 @inject NavigationManager NavigationManager
 
-<div class="page">
-    <div class="sidebar">
+<div class="relative flex flex-col md:flex-row">
+    <aside class="bg-gradient-to-b from-[rgb(5,39,103)] to-[#3a0647] md:w-64 md:h-screen md:sticky md:top-0">
         <NavMenu />
-    </div>
+    </aside>
 
-    <main>
-        <div class="top-row px-4">
+    <main class="flex-1">
+        <div class="flex items-center justify-between md:justify-end h-14 bg-[#f7f7f7] border-b border-[#d6d5d5] md:sticky md:top-0 md:z-10 px-3 md:px-6">
             @if (user != null)
             {
-                <span class="user-font">@user.Email</span>
-                <button class="btn btn btn-outline-secondary icon-button ms-3" title="Logout" @onclick="Logout">
-                    <i class="bi bi-box-arrow-right"></i>
+                <span class="text-sm leading-none">@user.Email</span>
+                <button class="px-3 py-2 hover:bg-gray-300 rounded-lg transition-colors flex-shrink-0 md:ml-2" title="Logout" @onclick="Logout">
+                    <i class="fas fa-right-from-bracket"></i>
                 </button>
             }
             else
             {
-                <span class="user-font">Guest</span>
-                <a href="settings" class="btn btn-outline-secondary icon-button" title="Login">
-                    <i class="bi bi-box-arrow-in-right"></i>
-                </a>
+                <span class="text-sm leading-none">Guest</span>
+                <button class="px-3 py-2 hover:bg-gray-300 rounded-lg transition-colors flex-shrink-0 md:ml-2" title="Login" @onclick="Login">
+                    <i class="fas fa-right-to-bracket"></i>
+                </button>
             }
         </div>
 
-        <article class="content px-4">
+        <article class="p-4">
             @Body
         </article>
     </main>
 </div>
-
-<style>
-    .user-font {
-        font-size: 0.9rem;
-    }
-    .icon-button {
-        padding: 1px 6px;
-        border: none;
-    }
-</style>
 
 @code {
     private Supabase.Gotrue.User? user;
@@ -62,6 +52,11 @@
         await AuthService.LogoutAsync();
         user = null;
         NavigationManager.NavigateTo(NavigationManager.BaseUri, forceLoad: true);
+    }
+
+    private void Login()
+    {
+        NavigationManager.NavigateTo("/settings");
     }
 
     public void Dispose()

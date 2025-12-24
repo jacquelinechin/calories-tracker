@@ -127,8 +127,8 @@ namespace CaloriesTracker.Pages
         total switch
         {
             <= 0 => "",
-            _ when total >= dailyCalorieGoal => "bg-green",
-            _ => "bg-yellow"
+            _ when total >= dailyCalorieGoal => "bg-green-200",
+            _ => "bg-yellow-200"
         };
     }
 }

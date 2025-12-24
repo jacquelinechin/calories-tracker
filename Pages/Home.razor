@@ -1,23 +1,23 @@
 ﻿@page "/"
 @using CaloriesTracker.Models
 
-<div class="calendar pb-1 mb-3">
-    <div class="calendar-header">
-        <button class="btn btn-outline-secondary icon-button" title="Previous Month" @onclick="PrevMonth">
-            <i class="bi bi-chevron-left"></i>
+<div class="max-w-md mx-auto pb-1 mb-3">
+    <div class="flex justify-between items-center mb-3 font-semibold">
+        <button class="px-4 py-2 hover:bg-gray-300 rounded-lg transition-colors flex-shrink-0" title="Previous Month" @onclick="PrevMonth">
+            <i class="fas fa-chevron-left"></i>
         </button>
         <span>@currentMonth.ToString("MMM yyyy")</span>
-        <button class="btn btn-outline-secondary icon-button" title="Next Month" @onclick="NextMonth">
-            <i class="bi bi-chevron-right"></i>
+        <button class="px-4 py-2 hover:bg-gray-300 rounded-lg transition-colors flex-shrink-0" title="Next Month" @onclick="NextMonth">
+            <i class="fas fa-chevron-right"></i>
         </button>
     </div>
 
-    <div class="calendar-grid">
+    <div class="grid grid-cols-7">
         @foreach (var week in Enum.GetValues<DayOfWeek>())
         {
-            <div class="calendar-week">
-                <div class="day">@week.ToString().Substring(0, 3).ToUpper()</div>
-            </div>
+            <span class="text-center text-xs text-gray-500 mb-2">
+                @week.ToString().Substring(0, 3).ToUpper()
+            </span>
         }
 
         @foreach (var week in Enum.GetValues<DayOfWeek>())
@@ -33,117 +33,128 @@
             var total = meals.Where(x => x.Date.Date == day.Date).Sum(x => x.Calories);
             var isToday = day.Date == DateTime.Today;
 
-            <div class="calendar-cell @(isToday ? "today" : "") @(day.Date == selectedDate.Date ? "selected" : "") @GetColor(total)" @onclick="() => OnDateChanged(day)">
-                <div class="day">@day.Day</div>
-                <div class="calories">@(total > 0 ? total + " kcal" : "")</div>
+            <div class="rounded-lg text-center transition-transform transition-shadow duration-150 cursor-pointer w-full aspect-square hover:scale-105 hover:shadow-md flex flex-col justify-center
+                @(day.Date == selectedDate.Date ? "border-2 border-[#0078d7] m-0" : "m-0.5") @GetColor(total)"
+                @onclick="() => OnDateChanged(day)">
+                <div class="text-sm @(isToday ? "font-semibold" : "")">@day.Day</div>
+                <div class="text-xs font-light">@(total > 0 ? total + " kcal" : "")</div>
             </div>
         }
     </div>
 </div>
 
-<div class="meal-card-row">
-    <h3 id="meal-form">@selectedDate.ToString("dd MMM yyyy")</h3>
+<div class="flex justify-between items-center">
+    <h3 class="text-lg font-semibold text-gray-900" id="meal-form">@selectedDate.ToString("dd MMM yyyy")</h3>
 
-    <div class="form-button-group" style="display: @(showMealForm ? "none" : "")">
-        <button class="btn btn-outline-primary" @onclick='() => showMealForm = true'>Add New Meal</button>
-    </div>
+    @if (!showMealForm)
+    {
+        <button class="p-3 font-medium rounded-lg transition-colors whitespace-nowrap border-2 border-gray-300 hover:bg-gray-300 flex gap-2 items-center leading-none"
+            @onclick='() => showMealForm = true'>
+            <i class="fas fa-utensils"></i> New Meal
+        </button>
+    }
 </div>
 
-<div class="form-wrapper">
-    <div class="form-container @(showMealForm ? "show" : "hide")">
+@if (showMealForm)
+{
+    <div class="rounded-lg shadow-lg bg-white p-4">
         <EditForm Model="inputMeal" OnValidSubmit="UpsertMeal">
             <DataAnnotationsValidator />
-
-            <div class="meal-card-row mb-2">
-                @if (inputMeal.Id == Guid.Empty)
-                {
-                    <h4>Add Meal</h4>
-                }
-                else
-                {
-                    <h4>Edit Meal</h4>
-                }
-                <button class="btn btn-outline-secondary icon-button" type="button" title="Close" @onclick='() => { showMealForm = false; Clear(); }'>
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-            <div class="mb-2">
-                <label>Meal Name</label>
-                <InputText class="form-control" @bind-Value="inputMeal.MealName" />
-                <ValidationMessage For="@(() => inputMeal.MealName)" />
-            </div>
-            <div class="mb-2">
-                <label>Date</label>
-                <InputDate class="form-control" @bind-Value="inputMeal.Date" />
-                <ValidationMessage For="@(() => inputMeal.Date)" />
-            </div>
-            <div class="mb-2">
-                <label>Fullness: @inputMeal.Fullness</label>
-                <div class="food-icon-container">
-                    @foreach (var level in Enum.GetValues<Fullness>())
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    @if (inputMeal.Id == Guid.Empty)
                     {
-                        <button class="food-icon @((int)inputMeal.Fullness >= (int)level ? "active" : "")" type="button"
-                                @onclick="() => inputMeal.Fullness = level">
-                            🍔
-                        </button>
+                        <h4 class="text-lg font-semibold text-gray-900">Add Meal</h4>
                     }
+                    else
+                    {
+                        <h4 class="text-lg font-semibold text-gray-900">Edit Meal</h4>
+                    }
+                    <button class="px-4 py-2 text-lg hover:bg-gray-300 rounded-lg transition-colors flex-shrink-0"
+                            type="button" title="Close" @onclick='() => { showMealForm = false; Clear(); }'>
+                        <i class="fas fa-xmark"></i>
+                    </button>
                 </div>
-                <ValidationMessage For="@(() => inputMeal.Fullness)" />
-            </div>
-            <div class="mb-2">
-                <label>Calories</label>
-                <InputNumber class="form-control" @bind-Value="inputMeal.Calories" />
-                <label class="font-caption">kcal</label>
-                <ValidationMessage For="@(() => inputMeal.Calories)" />
-            </div>
-            <div class="mb-2">
-                <label>Meal Type</label>
-                <InputSelect @bind-Value="inputMeal.MealType" class="form-select">
-                    @foreach (var value in Enum.GetValues(typeof(MealType)))
-                    {
-                        <option value="@value">@value</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="@(() => inputMeal.MealType)" />
-            </div>
-            <div class="form-button-group">
-                <button class="btn btn-primary" type="submit">Save</button>
-                <button class="btn btn-secondary" type="button" @onclick="Clear">Clear</button>
+                <div class="flex flex-col">
+                    <label class="text-gray-900">Meal Name</label>
+                    <InputText class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0f4a7a] focus:border-transparent"
+                        @bind-Value="inputMeal.MealName" />
+                    <ValidationMessage For="@(() => inputMeal.MealName)" />
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-gray-900">Date</label>
+                    <InputDate class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0f4a7a] focus:border-transparent" @bind-Value="inputMeal.Date" />
+                    <ValidationMessage For="@(() => inputMeal.Date)" />
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-gray-900">Fullness: @inputMeal.Fullness</label>
+                    <div>
+                        @foreach (var level in Enum.GetValues<Fullness>())
+                        {
+                            <button class="text-4xl flex-shrink-0 transition-all hover:scale-110 @((int)inputMeal.Fullness >= (int)level ? "opacity-100 drop-shadow-[0_0_4px_#f59e0b]" : "opacity-30 hover:opacity-80")"
+                                    type="button"
+                                    @onclick="() => inputMeal.Fullness = level">
+                                🍔
+                            </button>
+                        }
+                    </div>
+                    <ValidationMessage For="@(() => inputMeal.Fullness)" />
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-gray-900">Calories</label>
+                    <InputNumber class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0f4a7a] focus:border-transparent" @bind-Value="inputMeal.Calories" />
+                    <label class="text-sm text-gray-900">kcal</label>
+                    <ValidationMessage For="@(() => inputMeal.Calories)" />
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-gray-900">Meal Type</label>
+                    <InputSelect @bind-Value="inputMeal.MealType" class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0f4a7a] focus:border-transparent">
+                        @foreach (var value in Enum.GetValues(typeof(MealType)))
+                        {
+                            <option value="@value">@value</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => inputMeal.MealType)" />
+                </div>
+                <div class="flex justify-end items-center gap-2">
+                    <button class="px-4 py-2 font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50" type="button" @onclick="Clear">Clear</button>
+                    <button class="px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700" type="submit">Save</button>
+                </div>
             </div>
         </EditForm>
     </div>
-</div>
+}
 
-<hr />
+<hr class="my-6 opacity-30" />
 
-<h4 class="mt-3">Breakfast</h4>
-<div class="meal-card-container">
+<h4 class="text-lg font-semibold text-gray-900">Breakfast</h4>
+<div class="flex flex-row flex-wrap gap-2 my-2">
     @foreach (var item in meals.Where(x => x.MealType == MealType.Breakfast && x.Date == selectedDate))
     {
-        <div class="meal-card">
-            <div class="meal-card-row mb-2">
+        <div class="rounded-md shadow-md bg-white p-3 space-y-2">
+            <div class="flex justify-between items-center">
                 <strong>@item.MealName</strong>
-                <label class="font-caption">@item.Date.ToString("dd MMM yyyy")</label>
+                <label class="text-sm text-gray-900">@item.Date.ToString("dd MMM yyyy")</label>
             </div>
-            <div class="mb-2">
+            <div>
                 <label>Fullness: @item.Fullness</label>
-                <div class="food-icon-container">
+                <div>
                     @foreach (var level in Enum.GetValues<Fullness>())
                     {
-                        <button class="food-icon-display @((int)item.Fullness >= (int)level ? "active" : "")">
+                        <button class="text-4xl flex-shrink-0 !cursor-default @((int)item.Fullness >= (int)level ? "opacity-100 drop-shadow-[0_0_4px_#f59e0b]" : "opacity-30")">
                             🍔
                         </button>
                     }
                 </div>
             </div>
-            <div class="meal-card-row">
+            <div class="flex justify-between items-center">
                 <label>@item.Calories kcal</label>
                 <div>
-                    <button class="btn btn-outline-secondary icon-button" title="Edit" @onclick='() => EditMealAsync(item)'>
-                        <i class="bi bi-pencil"></i>
+                    <button class="px-3 py-2 hover:bg-gray-300 rounded-lg transition-colors flex-shrink-0" title="Edit" @onclick='() => EditMealAsync(item)'>
+                        <i class="fas fa-pencil"></i>
                     </button>
-                    <button class="btn btn-outline-secondary icon-button" title="Delete" @onclick='() => DeleteMeal(item)'>
-                        <i class="bi bi-trash"></i>
+                    <button class="px-3 py-2 hover:bg-gray-300 rounded-lg transition-colors flex-shrink-0" title="Delete" @onclick='() => DeleteMeal(item)'>
+                        <i class="fas fa-trash"></i>
                     </button>
                 </div>
             </div>
@@ -151,7 +162,7 @@
     }
 </div>
 
-<h4 class="mt-3">Lunch</h4>
+<h4 class="text-lg font-semibold text-gray-900">Lunch</h4>
 <div class="meal-card-container">
     @foreach (var item in meals.Where(x => x.MealType == MealType.Lunch && x.Date == selectedDate))
     {
@@ -186,7 +197,7 @@
     }
 </div>
 
-<h4 class="mt-3">Dinner</h4>
+<h4 class="text-lg font-semibold text-gray-900">Dinner</h4>
 <div class="meal-card-container">
     @foreach (var item in meals.Where(x => x.MealType == MealType.Dinner && x.Date == selectedDate))
     {

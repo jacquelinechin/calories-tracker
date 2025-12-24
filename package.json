@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx @tailwindcss/cli -i ./wwwroot/css/tailwind.css -o ./wwwroot/css/site.css --minify",
+    "build": "npx tailwindcss -i ./wwwroot/css/tailwind.css -o ./wwwroot/css/site.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,8 +20,9 @@
   },
   "homepage": "https://github.com/jacquelinechin/calories-tracker#readme",
   "devDependencies": {
+    "@tailwindcss/cli": "4.1",
     "autoprefixer": "^10.4.22",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17"
+    "tailwindcss": "4.1"
   }
 }
