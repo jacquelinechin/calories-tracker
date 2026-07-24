@@ -1,7 +1,8 @@
 ﻿@using CaloriesTracker.Services
 @inherits LayoutComponentBase
-@inject AuthService AuthService
-@inject NavigationManager NavigationManager
+@inject NavigationManager Nav
+@inject FirebaseAuthService AuthService
+@implements IDisposable
 
 <div class="page">
     <div class="sidebar">
@@ -10,9 +11,9 @@
 
     <main>
         <div class="top-row px-4">
-            @if (user != null)
+            @if (AuthService.IsLoggedIn)
             {
-                <span class="user-font">@user.Email</span>
+                <span class="user-font">@AuthService.Email</span>
                 <button class="btn btn btn-outline-secondary icon-button ms-3" title="Logout" @onclick="Logout">
                     <i class="bi bi-box-arrow-right"></i>
                 </button>
@@ -43,29 +44,17 @@
 </style>
 
 @code {
-    private Supabase.Gotrue.User? user;
-
     protected override async Task OnInitializedAsync()
     {
-        user = await AuthService.GetCurrentUserAsync();
-        AuthService.OnAuthStateChanged += HandleAuthStateChanged;
+        AuthService.AuthStateChanged += StateHasChanged;
+        await AuthService.InitializeAsync();
     }
 
-    private async Task HandleAuthStateChanged()
-    {
-        user = await AuthService.GetCurrentUserAsync();
-        await InvokeAsync(StateHasChanged);
-    }
+    public void Dispose() => AuthService.AuthStateChanged -= StateHasChanged;
 
     private async Task Logout()
     {
-        await AuthService.LogoutAsync();
-        user = null;
-        NavigationManager.NavigateTo(NavigationManager.BaseUri, forceLoad: true);
-    }
-
-    public void Dispose()
-    {
-        AuthService.OnAuthStateChanged -= HandleAuthStateChanged;
+        await AuthService.SignOutAsync();
+        Nav.NavigateTo("/settings", forceLoad: true);
     }
 }

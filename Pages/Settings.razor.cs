@@ -1,88 +1,124 @@
-﻿
-using CaloriesTracker.Models;
+﻿using CaloriesTracker.Models;
 using CaloriesTracker.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
-using System.Text.Json;
 
 namespace CaloriesTracker.Pages
 {
     public partial class Settings
     {
-        [Inject]
-        public required IJSRuntime JS { get; set; }
-        [Inject]
-        public required AuthService AuthService { get; set; }
-        [Inject]
-        public required MealService MealService { get; set; }
-        [Inject]
-        public required UserSettingsService UserSettingsService { get; set; }
+        [Inject] public IJSRuntime JS { get; set; } = default!;
+        [Inject] public FirebaseAuthService AuthService { get; set; } = default!;
+        [Inject] public UserDataService UserDataService { get; set; } = default!;
 
-        private Supabase.Gotrue.User? user;
         private string email = "";
         private string password = "";
-        private UserSettings inputUserSettings = new();
+        private int dailyCalorieGoal;
+        private int TotalLocalMeals { get; set; } = 0;
+        private int TotalFirebaseMeals { get; set; } = 0;
         private EditForm? form;
 
         protected override async Task OnInitializedAsync()
         {
-            user = await AuthService.GetCurrentUserAsync();
-            inputUserSettings.DailyCalorieGoal = await UserSettingsService.GetDailyCalorieGoalAsync();
+            AuthService.AuthStateChanged += OnAuthChanged;
+            await LoadGoal();
+            await LoadMeals();
+        }
+
+        private async void OnAuthChanged()
+        {
+            await LoadGoal();
+            await LoadMeals();
+        }
+
+        private async Task LoadGoal()
+        {
+            dailyCalorieGoal = await UserDataService.GetDailyCalorieGoalAsync();
+            StateHasChanged();
+        }
+
+        private async Task SaveGoal()
+        {
+            var result = await UserDataService.SetDailyCalorieGoalAsync(dailyCalorieGoal);
+            var statusMessage = result.Success ? "Saved!" : "Error: " + result.Error;
+            await JS.InvokeVoidAsync("alert", statusMessage);
+        }
+
+        private async Task LoadMeals()
+        {
+            TotalLocalMeals = await UserDataService.GetLocalMealCountAsync();
+            TotalFirebaseMeals = await UserDataService.GetFirebaseMealCountAsync();
+            StateHasChanged();
         }
 
         private async Task HandleLoginAsync()
         {
-            try
+            var result = await AuthService.SignInAsync(email, password);
+            if (!result.Success)
             {
-                user = await AuthService.LoginAsync(email, password);
-                inputUserSettings.DailyCalorieGoal = await UserSettingsService.GetDailyCalorieGoalAsync();
-                form!.EditContext!.Validate();
-            }
-            catch (Exception ex)
-            {
-                var error = JsonSerializer.Deserialize<SupabaseError>(ex.Message);
-                await JS.InvokeVoidAsync("alert", "Error: " + error?.Message);
+                var errorMessage = result.Error switch
+                {
+                    "auth/invalid-credential" => "Incorrect email or password.",
+                    "auth/too-many-requests" => "Too many attempts. Try again later.",
+                    _ => "Something went wrong. Please try again."
+                };
+
+                await JS.InvokeVoidAsync("alert", "Error: " + errorMessage);
             }
         }
 
         private async Task HandleSignUpAsync()
         {
-            try
+            var result = await AuthService.SignUpAsync(email, password);
+            if (!result.Success)
             {
-                user = await AuthService.SignUpAsync(email, password);
-                inputUserSettings.DailyCalorieGoal = await UserSettingsService.GetDailyCalorieGoalAsync();
-                form!.EditContext!.Validate();
-            }
-            catch (Exception ex)
-            {
-                var error = JsonSerializer.Deserialize<SupabaseError>(ex.Message);
-                await JS.InvokeVoidAsync("alert", "Error: " + error?.Message);
+                var errorMessage = result.Error switch
+                {
+                    "auth/email-already-in-use" => "That email is already registered.",
+                    "auth/weak-password" => "Password must be at least 6 characters.",
+                    "auth/invalid-email" => "Please enter a valid email.",
+                    _ => "Something went wrong. Please try again."
+                };
+
+                await JS.InvokeVoidAsync("alert", "Error: " + errorMessage);
             }
         }
 
         private async Task HandleLogoutAsync()
         {
-            await AuthService.LogoutAsync();
-            user = null;
-            inputUserSettings.DailyCalorieGoal = await UserSettingsService.GetDailyCalorieGoalAsync();
-            form!.EditContext!.Validate();
+            await AuthService.SignOutAsync();
         }
 
-        private async Task DeleteDataAsync()
+        private async Task DeleteLocalDataAsync()
         {
-            bool confirmed = await JS.InvokeAsync<bool>("confirm", "Delete all meal data?");
+            bool confirmed = await JS.InvokeAsync<bool>("confirm", "Delete all local storage meal data?");
             if (!confirmed)
                 return;
 
-            await MealService.DeleteAllUserMealAsync();
+            var result = await UserDataService.DeleteAllLocalMealAsync();
+            if (result.Success)
+                await LoadMeals();
+            else
+                await JS.InvokeVoidAsync("alert", "Error: " + result.Error);
         }
 
-        private async Task SaveDailyCaloriesGoalAsync()
+        private async Task DeleteFirebaseDataAsync()
         {
-            var success = await UserSettingsService.UpsertDailyCalorieGoalAsync(inputUserSettings.DailyCalorieGoal ?? 0);
-            if (success)
-                await JS.InvokeVoidAsync("alert", "Settings saved.");
+            bool confirmed = await JS.InvokeAsync<bool>("confirm", "Delete all Firebase meal data?");
+            if (!confirmed)
+                return;
+
+            var result = await UserDataService.DeleteAllFirebaseMealAsync();
+            if (result.Success)
+                await LoadMeals();
+            else
+                await JS.InvokeVoidAsync("alert", "Error: " + result.Error);
+        }
+
+        public void Dispose()
+        {
+            AuthService.AuthStateChanged -= OnAuthChanged;
         }
     }
 }

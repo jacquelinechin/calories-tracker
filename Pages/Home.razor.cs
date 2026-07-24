@@ -2,21 +2,16 @@
 using CaloriesTracker.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CaloriesTracker.Pages
 {
     public partial class Home
     {
-        [Inject]
-        public required MealService MealService { get; set; }
-        [Inject]
-        public required UserSettingsService UserSettingsService { get; set; }
-        [Inject]
-        public required IJSRuntime JS {  get; set; }
+        [Inject] public IJSRuntime JS { get; set; } = default!;
+        [Inject] public FirebaseAuthService AuthService { get; set; } = default!;
+        [Inject] public UserDataService UserDataService { get; set; } = default!;
 
-
-        private DateTime currentMonth = DateTime.Today;
+        private DateTime currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
         private List<DateTime> daysInMonth = new();
 
         private List<Meal> meals = new();
@@ -24,30 +19,38 @@ namespace CaloriesTracker.Pages
         private int totalCalories;
         private int dailyCalorieGoal;
         private bool showMealForm;
-        private DateTime selectedDate = DateTime.Today;
+        private DateOnly selectedDate = DateOnly.FromDateTime(DateTime.Today);
 
         protected override async Task OnInitializedAsync()
         {
-            inputMeal = new()
-            {
-                Date = selectedDate
-            };
+            AuthService.AuthStateChanged += OnAuthChanged;
+            await LoadData();
+        }
 
-            meals = await MealService.GetMealsAsync();
-            dailyCalorieGoal = await UserSettingsService.GetDailyCalorieGoalAsync();
+        private async void OnAuthChanged()
+        {
+            await LoadData();
+        }
+
+        private async Task LoadData()
+        {
+            meals = await UserDataService.GetMealsAsync();
+            dailyCalorieGoal = await UserDataService.GetDailyCalorieGoalAsync();
 
             GenerateCalendar();
 
             totalCalories = meals
-                .Where(x => x.Date.Date == selectedDate.Date)
+                .Where(x => x.Date == selectedDate)
                 .Sum(x => x.Calories);
+
+            StateHasChanged();
         }
 
         private async Task UpsertMeal()
         {
             var mealToUpsert = new Meal
             {
-                Id = inputMeal.Id == Guid.Empty ? Guid.NewGuid() : inputMeal.Id,
+                Id = inputMeal.Id,
                 Date = inputMeal.Date,
                 MealName = inputMeal.MealName,
                 MealType = inputMeal.MealType,
@@ -55,8 +58,17 @@ namespace CaloriesTracker.Pages
                 Fullness = inputMeal.Fullness
             };
 
-            await MealService.UpsertMealAsync(mealToUpsert);
-            await OnInitializedAsync();
+            var result = mealToUpsert.Id == null ? await UserDataService.AddMealAsync(mealToUpsert)
+                : await UserDataService.UpdateMealAsync(mealToUpsert);
+            
+            if (result.Success)
+            {
+                await LoadData();
+                Clear();
+                await JS.InvokeVoidAsync("alert", "Saved!");
+            }
+            else
+                await JS.InvokeVoidAsync("alert", "Error: " + result.Error);
         }
 
         private void Clear()
@@ -73,8 +85,9 @@ namespace CaloriesTracker.Pages
             if (!confirmed)
                 return;
 
-            await MealService.DeleteMealAsync(meal.Id);
-            await OnInitializedAsync();
+            await UserDataService.DeleteMealAsync(meal.Id!);
+            await LoadData();
+            Clear();
         }
 
         private async Task EditMealAsync(Meal meal)
@@ -92,12 +105,12 @@ namespace CaloriesTracker.Pages
             await JS.InvokeVoidAsync("scrollToElementWithOffset", "meal-form", 60);
         }
 
-        private void OnDateChanged(DateTime date)
+        private void OnDateChanged(DateOnly date)
         {
             selectedDate = date;
             Clear();
             totalCalories = meals
-                .Where(x => x.Date.Date == selectedDate.Date)
+                .Where(x => x.Date == selectedDate)
                 .Sum(x => x.Calories);
         }
 
@@ -124,11 +137,17 @@ namespace CaloriesTracker.Pages
         }
 
         private string GetColor(int total) =>
-        total switch
+            dailyCalorieGoal == 0 ? "" :
+            total switch
+            {
+                <= 0 => "",
+                _ when total >= dailyCalorieGoal => "bg-green",
+                _ => "bg-yellow"
+            };
+
+        public void Dispose()
         {
-            <= 0 => "",
-            _ when total >= dailyCalorieGoal => "bg-green",
-            _ => "bg-yellow"
-        };
+            AuthService.AuthStateChanged -= OnAuthChanged;
+        }
     }
 }

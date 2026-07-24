@@ -1,62 +1,70 @@
 ﻿@page "/settings"
+@implements IDisposable
 
 <h4>Settings</h4>
 
 <div class="setting-card-container">
-@if (user is not null)
-{
-    <div class="setting-card">
-        <strong>User Account</strong>
-        <div class="setting-card-row">
-            <label>@user.Email</label>
-            <button class="btn btn-secondary btn-sm" @onclick="HandleLogoutAsync">Logout</button>
-        </div>
-    </div>
 
-    <div class="setting-card">
-        <strong>Data Storage</strong>
-        <div class="setting-card-row">
-            <label>Supabase</label>
-            <button class="btn btn-danger btn-sm" @onclick="DeleteDataAsync">Delete All Data</button>
-        </div>
-    </div>
-}
-else
-{
-    <div class="setting-card">
-        <strong>User Account</strong>
-        <div>
-            <label>Guest</label>
-        </div>
-        <InputText class="form-control my-2" @bind-Value="email" placeholder="Email" />
-        <InputText class="form-control my-2" @bind-Value="password" placeholder="Password" type="password" />
-        <div class="form-button-group">
-            <button class="btn btn-primary btn-sm" @onclick="HandleLoginAsync">Login</button>
-            <button class="btn btn-secondary btn-sm" @onclick="HandleSignUpAsync">Sign Up</button>
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <strong>Data Storage</strong>
-        <div class="setting-card-row">
-            <label>Local Storage</label>
-            <button class="btn btn-danger btn-sm" @onclick="DeleteDataAsync">Delete All Data</button>
-        </div>
-    </div>
-}
-    <div class="setting-card">
-        <strong>Daily Calorie Goal</strong>
-        <EditForm Model="inputUserSettings" OnValidSubmit="SaveDailyCaloriesGoalAsync" @ref="form">
-            <DataAnnotationsValidator />
-            <div class="setting-card-row">
-                <div class="d-flex align-items-center gap-2">
-                    <InputNumber class="form-control" @bind-Value="inputUserSettings.DailyCalorieGoal" />
-                    <label class="font-caption">kcal</label>
-                </div>
-                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+    @* User Account *@
+    @if (AuthService.IsLoggedIn)
+    {
+        <div class="setting-card">
+            <div class="mb-2">
+                <strong>User Account</strong>
             </div>
-            <ValidationMessage For="@(() => inputUserSettings.DailyCalorieGoal)" />
-        </EditForm>
+            <div class="setting-card-row">
+                <label>@AuthService.Email</label>
+                <button class="btn btn-secondary btn-sm" @onclick="HandleLogoutAsync">Logout</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="setting-card">
+            <div class="mb-2">
+                <strong>User Account</strong>
+            </div>
+            <div>
+                <label>Guest</label>
+            </div>
+            <InputText class="form-control my-2" @bind-Value="email" placeholder="Email" />
+            <InputText class="form-control my-2" @bind-Value="password" placeholder="Password" type="password" />
+            <div class="form-button-group">
+                <button class="btn btn-primary btn-sm" @onclick="HandleLoginAsync">Login</button>
+                <button class="btn btn-secondary btn-sm" @onclick="HandleSignUpAsync">Sign Up</button>
+            </div>
+        </div>
+    }
+
+    @* Data Storage *@
+    <div class="setting-card">
+        <div class="mb-2">
+            <strong>Data Storage</strong>
+        </div>
+        <div class="setting-card-row mb-1">
+            <label>Local Storage: @TotalLocalMeals.ToString("N0") meal record(s)</label>
+            <button class="btn btn-danger btn-sm" @onclick="DeleteLocalDataAsync" disabled="@(TotalLocalMeals == 0)">Delete All Data</button>
+        </div>
+        @if (AuthService.IsLoggedIn)
+        {
+            <div class="setting-card-row">
+                <label>Firebase: @TotalFirebaseMeals.ToString("N0") meal record(s)</label>
+                <button class="btn btn-danger btn-sm" @onclick="DeleteFirebaseDataAsync" disabled="@(TotalFirebaseMeals == 0)">Delete All Data</button>
+            </div>
+        }
+    </div>
+
+    @* Daily Calorie Goal *@
+    <div class="setting-card">
+        <div class="mb-2">
+            <strong>Daily Calorie Goal</strong>
+        </div>
+        <div class="setting-card-row">
+            <div class="d-flex align-items-center gap-2">
+                <InputNumber class="form-control" @bind-Value="dailyCalorieGoal" />
+                <label class="font-caption">kcal</label>
+            </div>
+            <button class="btn btn-primary btn-sm" @onclick="SaveGoal">Save</button>
+        </div>
     </div>
 </div>
-
