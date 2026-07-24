@@ -27,6 +27,156 @@
         <a href="." class="reload">Reload</a>
         <span class="dismiss">🗙</span>
     </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, orderBy, writeBatch } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-Q9Pm4WrlLfta2miKKtLn6oQq80ZVkjU",
+            authDomain: "calories-tracker-3659f.firebaseapp.com",
+            projectId: "calories-tracker-3659f",
+            storageBucket: "calories-tracker-3659f.firebasestorage.app",
+            messagingSenderId: "48036696900",
+            appId: "1:48036696900:web:35675d27600693ca91fd11"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        setPersistence(auth, browserLocalPersistence);
+
+        window.firebaseInterop = {
+            dotNetHelper: null,
+
+            init: function (dotNetHelper) {
+                this.dotNetHelper = dotNetHelper;
+                onAuthStateChanged(auth, (user) => {
+                    this.dotNetHelper.invokeMethodAsync(
+                        'OnAuthStateChanged',
+                        user ? user.uid : null,
+                        user ? user.email : null
+                    );
+                });
+            },
+
+            signIn: async function (email, password) {
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    return { success: true, error: null };
+                } catch (e) {
+                    return { success: false, error: e.code };
+                }
+            },
+
+            signUp: async function (email, password) {
+                try {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    return { success: true, error: null };
+                } catch (e) {
+                    return { success: false, error: e.code };
+                }
+            },
+
+            signOut: function () {
+                return signOut(auth);
+            },
+
+            getUserData: async function (userId) {
+                const docRef = doc(db, "users", userId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    return docSnap.data();
+                }
+                return null;
+            },
+
+            setDailyCalorieGoal: async function (userId, goal) {
+                try {
+                    const docRef = doc(db, "users", userId);
+                    // setDoc with merge:true creates the doc if it doesn't exist,
+                    // or updates just this field if it does — won't wipe other fields
+                    await setDoc(docRef, { dailyCalorieGoal: goal }, { merge: true });
+                    return { success: true, error: null };
+                } catch (e) {
+                    return { success: false, error: e.code };
+                }
+            },
+
+            addMeal: async function (userId, date, mealName, mealType, calories, fullness) {
+                try {
+                    const mealsRef = collection(db, "users", userId, "meals");
+                    const docRef = await addDoc(mealsRef, { date, mealName, mealType, calories, fullness });
+                    return { success: true, id: docRef.id, error: null };
+                } catch (e) {
+                    return { success: false, id: null, error: e.code };
+                }
+            },
+
+            getMeals: async function (userId) {
+                try {
+                    const mealsRef = collection(db, "users", userId, "meals");
+                    const q = query(mealsRef, orderBy("date", "desc"));
+                    const snapshot = await getDocs(q);
+                    const meals = [];
+                    snapshot.forEach((docSnap) => {
+                        meals.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                    return meals;
+                } catch (e) {
+                    console.error(e);
+                    return [];
+                }
+            },
+
+            updateMeal: async function (userId, mealId, date, mealName, mealType, calories, fullness) {
+                try {
+                    const mealRef = doc(db, "users", userId, "meals", mealId);
+                    await updateDoc(mealRef, { date, mealName, mealType, calories, fullness });
+                    return { success: true, error: null };
+                } catch (e) {
+                    return { success: false, error: e.code };
+                }
+            },
+
+            deleteMeal: async function (userId, mealId) {
+                try {
+                    const mealRef = doc(db, "users", userId, "meals", mealId);
+                    await deleteDoc(mealRef);
+                    return { success: true, error: null };
+                } catch (e) {
+                    return { success: false, error: e.code };
+                }
+            },
+
+            deleteAllMeals: async function (userId) {
+                try {
+                    const mealsRef = collection(db, "users", userId, "meals");
+                    const snapshot = await getDocs(mealsRef);
+
+                    if (snapshot.empty) {
+                        return { success: true, error: null };
+                    }
+
+                    const docs = snapshot.docs;
+                    const chunkSize = 500;
+
+                    for (let i = 0; i < docs.length; i += chunkSize) {
+                        const batch = writeBatch(db);
+                        const chunk = docs.slice(i, i + chunkSize);
+                        chunk.forEach((docSnap) => batch.delete(docSnap.ref));
+                        await batch.commit();
+                    }
+
+                    return { success: true, error: null };
+                } catch (e) {
+                    return { success: false, error: e.code };
+                }
+            }
+        };
+    </script>
+
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
         window.scrollToElementWithOffset = (elementId, offset = 0) => {
