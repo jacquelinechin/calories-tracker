@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "CaloriesTracker",
   "resources": {
-    "hash": "sha256-tr2NBZvQZpG1prH+oem+F5RNcLKp7NmDvnhT0IwzXd4=",
+    "hash": "sha256-7e8XW+q5ntqtb6H62aOX3LyFiGEBn8NDsbiT91Vs7Xg=",
     "fingerprinting": {
       "Blazored.LocalStorage.12n6dz54qr.wasm": "Blazored.LocalStorage.wasm",
       "Microsoft.AspNetCore.Components.12zdq4qcq7.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -28,7 +28,7 @@
       "System.ComponentModel.Primitives.ecbtje7tba.wasm": "System.ComponentModel.Primitives.wasm",
       "System.ComponentModel.TypeConverter.ljygp2xko2.wasm": "System.ComponentModel.TypeConverter.wasm",
       "System.ComponentModel.54g84uj3hp.wasm": "System.ComponentModel.wasm",
-      "System.Console.j2zsidg3wc.wasm": "System.Console.wasm",
+      "System.Console.xqtscl4j9l.wasm": "System.Console.wasm",
       "System.IO.Pipelines.9d8z48tcc6.wasm": "System.IO.Pipelines.wasm",
       "System.Linq.Expressions.ng7fbhlx2n.wasm": "System.Linq.Expressions.wasm",
       "System.Linq.2s4z7u3j8f.wasm": "System.Linq.wasm",
@@ -46,7 +46,7 @@
       "System.Threading.kz1xg6b1zt.wasm": "System.Threading.wasm",
       "System.v2bpr4wvug.wasm": "System.wasm",
       "System.Private.CoreLib.nlaohsyt66.wasm": "System.Private.CoreLib.wasm",
-      "CaloriesTracker.eysvrgm4nw.wasm": "CaloriesTracker.wasm",
+      "CaloriesTracker.2yke3pk44h.wasm": "CaloriesTracker.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.mf92lzu2d1.js": "dotnet.native.js",
       "dotnet.native.6sm8j8phll.wasm": "dotnet.native.wasm",
@@ -99,7 +99,7 @@
       "System.ComponentModel.Primitives.ecbtje7tba.wasm": "sha256-UoaVnR3sBh+xpmTxg0V0sIijtngpY0OjPUhRpQuXBdU=",
       "System.ComponentModel.TypeConverter.ljygp2xko2.wasm": "sha256-H9wvxiy7rn+qGj2aH9kuDa20IyVWPahLeSqAnNdE0xw=",
       "System.ComponentModel.54g84uj3hp.wasm": "sha256-la/5DXgGdfgpUT20edMsYn2nb/vLh3sL3rmS/d09A1o=",
-      "System.Console.j2zsidg3wc.wasm": "sha256-dfl3WoLryu60u/ODQ2ucdC/R0ZcepnvcWNrCTvTNpRE=",
+      "System.Console.xqtscl4j9l.wasm": "sha256-Z3ogKfPqNTyR87gT+vPmtpQ6YzNUU4h36ZlS5OHlFbk=",
       "System.IO.Pipelines.9d8z48tcc6.wasm": "sha256-HYkYhkZSipct0OgAjDNJUWvpDesLV9bQA9eJ6BiixR0=",
       "System.Linq.Expressions.ng7fbhlx2n.wasm": "sha256-hzLqN8+1IrA0p8bUjdaNhS+K7gNRQseZxzwgVhuIjFU=",
       "System.Linq.2s4z7u3j8f.wasm": "sha256-Dm707OYyhBaeqkAMf1AO0w+3jDexzHxn7tdUS4ZWLOU=",
@@ -115,7 +115,7 @@
       "System.Text.RegularExpressions.hjk9iz4ims.wasm": "sha256-PU6LMO9eWd5McXjq3Yk1QF5PJE5K1Bdm8BS6TaTtfcI=",
       "System.Threading.kz1xg6b1zt.wasm": "sha256-UGB8YJJufJFWDxfdW4Fd5rOlFUdaThTtqJ7rgVXWA6A=",
       "System.v2bpr4wvug.wasm": "sha256-V0+qqJsDHNUBCJjD4bkeDVr+f+Orz+wNldNNIxrsd+4=",
-      "CaloriesTracker.eysvrgm4nw.wasm": "sha256-Vj8wJZX/r9xt/bNw0aHmIz4fbZExXJ0KciVqY4sUNyI="
+      "CaloriesTracker.2yke3pk44h.wasm": "sha256-dnfgEqcpn3b6CEkUUvZ2KHCrM0ceKuGtMcYXfSumObc="
     }
   },
   "cacheBootResources": true,
