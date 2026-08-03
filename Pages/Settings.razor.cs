@@ -14,7 +14,7 @@ namespace CaloriesTracker.Pages
 
         private string email = "";
         private string password = "";
-        private int dailyCalorieGoal;
+        private int calorieGoal;
         private int TotalLocalMeals { get; set; } = 0;
         private int TotalFirebaseMeals { get; set; } = 0;
         private EditForm? form;
@@ -34,13 +34,13 @@ namespace CaloriesTracker.Pages
 
         private async Task LoadGoal()
         {
-            dailyCalorieGoal = await UserDataService.GetDailyCalorieGoalAsync();
+            calorieGoal = await UserDataService.GetCalorieGoalAsync();
             StateHasChanged();
         }
 
         private async Task SaveGoal()
         {
-            var result = await UserDataService.SetDailyCalorieGoalAsync(dailyCalorieGoal);
+            var result = await UserDataService.SetCalorieGoalAsync(calorieGoal);
             var statusMessage = result.Success ? "Saved!" : "Error: " + result.Error;
             await JS.InvokeVoidAsync("alert", statusMessage);
         }

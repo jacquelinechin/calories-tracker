@@ -17,7 +17,7 @@ namespace CaloriesTracker.Pages
         private List<Meal> meals = new();
         private Meal inputMeal = new();
         private int totalCalories;
-        private int dailyCalorieGoal;
+        private int calorieGoal;
         private bool showMealForm;
         private DateOnly selectedDate = DateOnly.FromDateTime(DateTime.Today);
 
@@ -35,7 +35,7 @@ namespace CaloriesTracker.Pages
         private async Task LoadData()
         {
             meals = await UserDataService.GetMealsAsync();
-            dailyCalorieGoal = await UserDataService.GetDailyCalorieGoalAsync();
+            calorieGoal = await UserDataService.GetCalorieGoalAsync();
 
             GenerateCalendar();
 
@@ -53,8 +53,11 @@ namespace CaloriesTracker.Pages
                 Id = inputMeal.Id,
                 Date = inputMeal.Date,
                 MealName = inputMeal.MealName,
-                MealType = inputMeal.MealType,
                 Calories = inputMeal.Calories,
+                ProteinGrams = inputMeal.ProteinGrams,
+                CarbsGrams = inputMeal.CarbsGrams,
+                FatGrams = inputMeal.FatGrams,
+                MealType = inputMeal.MealType,
                 Fullness = inputMeal.Fullness
             };
 
@@ -98,8 +101,11 @@ namespace CaloriesTracker.Pages
                 Id = meal.Id,
                 Date = meal.Date,
                 MealName = meal.MealName,
-                MealType = meal.MealType,
                 Calories = meal.Calories,
+                ProteinGrams = meal.ProteinGrams,
+                CarbsGrams = meal.CarbsGrams,
+                FatGrams = meal.FatGrams,
+                MealType = meal.MealType,
                 Fullness = meal.Fullness
             };
             await JS.InvokeVoidAsync("scrollToElementWithOffset", "meal-form", 60);
@@ -137,11 +143,11 @@ namespace CaloriesTracker.Pages
         }
 
         private string GetColor(int total) =>
-            dailyCalorieGoal == 0 ? "" :
+            calorieGoal == 0 ? "" :
             total switch
             {
                 <= 0 => "",
-                _ when total >= dailyCalorieGoal => "bg-green",
+                _ when total >= calorieGoal => "bg-green",
                 _ => "bg-yellow"
             };
 

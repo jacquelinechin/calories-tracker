@@ -92,22 +92,22 @@
                 return null;
             },
 
-            setDailyCalorieGoal: async function (userId, goal) {
+            setCalorieGoal: async function (userId, goal) {
                 try {
                     const docRef = doc(db, "users", userId);
                     // setDoc with merge:true creates the doc if it doesn't exist,
                     // or updates just this field if it does — won't wipe other fields
-                    await setDoc(docRef, { dailyCalorieGoal: goal }, { merge: true });
+                    await setDoc(docRef, { calorieGoal: goal }, { merge: true });
                     return { success: true, error: null };
                 } catch (e) {
                     return { success: false, error: e.code };
                 }
             },
 
-            addMeal: async function (userId, date, mealName, mealType, calories, fullness) {
+            addMeal: async function (userId, date, mealName, calories, proteinGrams, carbsGrams, fatGrams, mealType, fullness) {
                 try {
                     const mealsRef = collection(db, "users", userId, "meals");
-                    const docRef = await addDoc(mealsRef, { date, mealName, mealType, calories, fullness });
+                    const docRef = await addDoc(mealsRef, { date, mealName, calories, proteinGrams, carbsGrams, fatGrams, mealType, fullness });
                     return { success: true, id: docRef.id, error: null };
                 } catch (e) {
                     return { success: false, id: null, error: e.code };
@@ -130,10 +130,10 @@
                 }
             },
 
-            updateMeal: async function (userId, mealId, date, mealName, mealType, calories, fullness) {
+            updateMeal: async function (userId, mealId, date, mealName, calories, proteinGrams, carbsGrams, fatGrams, mealType, fullness) {
                 try {
                     const mealRef = doc(db, "users", userId, "meals", mealId);
-                    await updateDoc(mealRef, { date, mealName, mealType, calories, fullness });
+                    await updateDoc(mealRef, { date, mealName, calories, proteinGrams, carbsGrams, fatGrams, mealType, fullness });
                     return { success: true, error: null };
                 } catch (e) {
                     return { success: false, error: e.code };

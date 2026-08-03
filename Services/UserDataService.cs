@@ -15,14 +15,14 @@ namespace CaloriesTracker.Services
             _authService = authService;
         }
 
-        public async Task<int> GetDailyCalorieGoalAsync()
+        public async Task<int> GetCalorieGoalAsync()
         {
             try
             {
                 if (_authService.IsLoggedIn)
                 {
                     var data = await _js.InvokeAsync<JsonElement?>("firebaseInterop.getUserData", _authService.UserId!);
-                    if (data.HasValue && data.Value.TryGetProperty("dailyCalorieGoal", out var goalProp)
+                    if (data.HasValue && data.Value.TryGetProperty("calorieGoal", out var goalProp)
                         && goalProp.ValueKind == JsonValueKind.Number && goalProp.TryGetInt32(out var goal))
                     {
                         return goal;
@@ -31,35 +31,35 @@ namespace CaloriesTracker.Services
                 }
                 else
                 {
-                    var json = await _js.InvokeAsync<string>("localStorage.getItem", "guest_daily_calorie_goal");
+                    var json = await _js.InvokeAsync<string>("localStorage.getItem", "guest_calorie_goal");
                     if (string.IsNullOrEmpty(json)) return 0;
                     return JsonSerializer.Deserialize<int?>(json) ?? 0;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error getting daily calorie goal: {e.Message}");
+                Console.WriteLine($"Error getting calorie goal: {e.Message}");
                 return 0;
             }
         }
 
-        public async Task<FirebaseResult> SetDailyCalorieGoalAsync(int goal)
+        public async Task<FirebaseResult> SetCalorieGoalAsync(int goal)
         {
             try
             {
                 if (_authService.IsLoggedIn)
                 {
-                    return await _js.InvokeAsync<FirebaseResult>("firebaseInterop.setDailyCalorieGoal", _authService.UserId!, goal).AsTask();
+                    return await _js.InvokeAsync<FirebaseResult>("firebaseInterop.setCalorieGoal", _authService.UserId!, goal).AsTask();
                 }
                 else
                 {
-                    await _js.InvokeVoidAsync("localStorage.setItem", "guest_daily_calorie_goal", goal);
+                    await _js.InvokeVoidAsync("localStorage.setItem", "guest_calorie_goal", goal);
                     return new FirebaseResult { Success = true };
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error setting daily calorie goal: {e.Message}");
+                Console.WriteLine($"Error setting calorie goal: {e.Message}");
                 return new FirebaseResult { Success = false, Error = e.Message };
             }
         }
@@ -71,7 +71,8 @@ namespace CaloriesTracker.Services
                 if (_authService.IsLoggedIn)
                 {
                     return await _js.InvokeAsync<FirebaseResult>("firebaseInterop.addMeal",
-                        _authService.UserId!, meal.Date, meal.MealName, meal.MealType, meal.Calories, meal.Fullness).AsTask();
+                        _authService.UserId!, meal.Date, meal.MealName, meal.Calories, meal.ProteinGrams, meal.CarbsGrams, meal.FatGrams,
+                        meal.MealType, meal.Fullness).AsTask();
                 }
                 else
                 {
@@ -118,7 +119,8 @@ namespace CaloriesTracker.Services
                 if (_authService.IsLoggedIn)
                 {
                     return await _js.InvokeAsync<FirebaseResult>("firebaseInterop.updateMeal",
-                        _authService.UserId!, meal.Id, meal.Date, meal.MealName, meal.MealType, meal.Calories, meal.Fullness).AsTask();
+                        _authService.UserId!, meal.Id, meal.Date, meal.MealName, meal.Calories, meal.ProteinGrams, meal.CarbsGrams, meal.FatGrams,
+                        meal.MealType, meal.Fullness).AsTask();
                 }
                 else
                 {
@@ -128,8 +130,11 @@ namespace CaloriesTracker.Services
 
                     existing.Date = meal.Date;
                     existing.MealName = meal.MealName;
-                    existing.MealType = meal.MealType;
                     existing.Calories = meal.Calories;
+                    existing.ProteinGrams = meal.ProteinGrams;
+                    existing.CarbsGrams = meal.CarbsGrams;
+                    existing.FatGrams = meal.FatGrams;
+                    existing.MealType = meal.MealType;
                     existing.Fullness = meal.Fullness;
 
                     await _js.InvokeVoidAsync("localStorage.setItem", "guest_meals", JsonSerializer.Serialize(localMeals));

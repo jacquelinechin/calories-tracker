@@ -92,6 +92,26 @@
                 <label class="font-caption">kcal</label>
                 <ValidationMessage For="@(() => inputMeal.Calories)" />
             </div>
+            <div class="mb-2 flex-justify-start">
+                <div>
+                    <label>Protein</label>
+                    <InputNumber class="form-control" @bind-Value="inputMeal.ProteinGrams" />
+                    <label class="font-caption">g</label>
+                    <ValidationMessage For="@(() => inputMeal.ProteinGrams)" />
+                </div>
+                <div>
+                    <label>Carbs</label>
+                    <InputNumber class="form-control" @bind-Value="inputMeal.CarbsGrams" />
+                    <label class="font-caption">g</label>
+                    <ValidationMessage For="@(() => inputMeal.CarbsGrams)" />
+                </div>
+                <div>
+                    <label>Fat</label>
+                    <InputNumber class="form-control" @bind-Value="inputMeal.FatGrams" />
+                    <label class="font-caption">g</label>
+                    <ValidationMessage For="@(() => inputMeal.FatGrams)" />
+                </div>
+            </div>
             <div class="mb-2">
                 <label>Meal Type</label>
                 <InputSelect @bind-Value="inputMeal.MealType" class="form-select">
@@ -133,7 +153,31 @@
                 </div>
             </div>
             <div class="meal-card-row">
-                <label>@item.Calories kcal</label>
+                <div>
+                    <div class="font-sm-faded">Calories</div>
+                    <label>@item.Calories kcal</label>
+                </div>
+                @if (item.ProteinGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Protein</div>
+                        <label>@item.ProteinGrams g</label>
+                    </div>
+                }
+                @if (item.CarbsGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Carbs</div>
+                        <label>@item.CarbsGrams g</label>
+                    </div>
+                }
+                @if (item.FatGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Fat</div>
+                        <label>@item.FatGrams g</label>
+                    </div>
+                }
                 <div>
                     <button class="btn btn-outline-secondary icon-button" title="Edit" @onclick='() => EditMealAsync(item)'>
                         <i class="bi bi-pencil"></i>
@@ -168,7 +212,31 @@
                 </div>
             </div>
             <div class="meal-card-row">
-                <label>@item.Calories kcal</label>
+                <div>
+                    <div class="font-sm-faded">Calories</div>
+                    <label>@item.Calories kcal</label>
+                </div>
+                @if (item.ProteinGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Protein</div>
+                        <label>@item.ProteinGrams g</label>
+                    </div>
+                }
+                @if (item.CarbsGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Carbs</div>
+                        <label>@item.CarbsGrams g</label>
+                    </div>
+                }
+                @if (item.FatGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Fat</div>
+                        <label>@item.FatGrams g</label>
+                    </div>
+                }
                 <div>
                     <button class="btn btn-outline-secondary icon-button" title="Edit" @onclick='() => EditMealAsync(item)'>
                         <i class="bi bi-pencil"></i>
@@ -203,7 +271,31 @@
                 </div>
             </div>
             <div class="meal-card-row">
-                <label>@item.Calories kcal</label>
+                <div>
+                    <div class="font-sm-faded">Calories</div>
+                    <label>@item.Calories kcal</label>
+                </div>
+                @if (item.ProteinGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Protein</div>
+                        <label>@item.ProteinGrams g</label>
+                    </div>
+                }
+                @if (item.CarbsGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Carbs</div>
+                        <label>@item.CarbsGrams g</label>
+                    </div>
+                }
+                @if (item.FatGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Fat</div>
+                        <label>@item.FatGrams g</label>
+                    </div>
+                }
                 <div>
                     <button class="btn btn-outline-secondary icon-button" title="Edit" @onclick='() => EditMealAsync(item)'>
                         <i class="bi bi-pencil"></i>
@@ -238,7 +330,31 @@
                 </div>
             </div>
             <div class="meal-card-row">
-                <label>@item.Calories kcal</label>
+                <div>
+                    <div class="font-sm-faded">Calories</div>
+                    <label>@item.Calories kcal</label>
+                </div>
+                @if (item.ProteinGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Protein</div>
+                        <label>@item.ProteinGrams g</label>
+                    </div>
+                }
+                @if (item.CarbsGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Carbs</div>
+                        <label>@item.CarbsGrams g</label>
+                    </div>
+                }
+                @if (item.FatGrams > 0)
+                {
+                    <div>
+                        <div class="font-sm-faded">Fat</div>
+                        <label>@item.FatGrams g</label>
+                    </div>
+                }
                 <div>
                     <button class="btn btn-outline-secondary icon-button" title="Edit" @onclick='() => EditMealAsync(item)'>
                         <i class="bi bi-pencil"></i>
@@ -252,4 +368,4 @@
     }
 </div>
 
-<p class="mt-3">Total calories: @totalCalories kcal @(dailyCalorieGoal > 0 ? $"/ {dailyCalorieGoal} kcal" : "")</p>
+<p class="mt-3">Total calories: @totalCalories kcal @(calorieGoal > 0 ? $"/ {calorieGoal} kcal" : "")</p>
