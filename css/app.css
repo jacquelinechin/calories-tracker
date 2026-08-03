@@ -305,3 +305,15 @@ code {
     align-items: center;
     gap: 1.5rem;
 }
+
+.flex-justify-start {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.font-sm-faded {
+    font-size: 0.75rem;
+    color: gray;
+}

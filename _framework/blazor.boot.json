@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "CaloriesTracker",
   "resources": {
-    "hash": "sha256-7e8XW+q5ntqtb6H62aOX3LyFiGEBn8NDsbiT91Vs7Xg=",
+    "hash": "sha256-HJHyTYlfNrB/hz2U6r04u2cD3T+kBy3aMIgJE3gzqVs=",
     "fingerprinting": {
       "Blazored.LocalStorage.12n6dz54qr.wasm": "Blazored.LocalStorage.wasm",
       "Microsoft.AspNetCore.Components.12zdq4qcq7.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -45,8 +45,8 @@
       "System.Text.RegularExpressions.hjk9iz4ims.wasm": "System.Text.RegularExpressions.wasm",
       "System.Threading.kz1xg6b1zt.wasm": "System.Threading.wasm",
       "System.v2bpr4wvug.wasm": "System.wasm",
-      "System.Private.CoreLib.nlaohsyt66.wasm": "System.Private.CoreLib.wasm",
-      "CaloriesTracker.2yke3pk44h.wasm": "CaloriesTracker.wasm",
+      "System.Private.CoreLib.k32usyimru.wasm": "System.Private.CoreLib.wasm",
+      "CaloriesTracker.nkw7wta018.wasm": "CaloriesTracker.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.mf92lzu2d1.js": "dotnet.native.js",
       "dotnet.native.6sm8j8phll.wasm": "dotnet.native.wasm",
@@ -71,7 +71,7 @@
     },
     "coreAssembly": {
       "System.Runtime.InteropServices.JavaScript.gsm3njtp1i.wasm": "sha256-4LYjaWKi4KrevpC9ZRt4hasWE5jfZIBmiENGBL4XWD0=",
-      "System.Private.CoreLib.nlaohsyt66.wasm": "sha256-q0wK6qtzb09MwhpvRIM7Ap1fMZx5iYrfWZX6EnI1ue4="
+      "System.Private.CoreLib.k32usyimru.wasm": "sha256-IGpobqm5GEYY/kiO4IxwC+gMzynd+NFsvTFPpMC8kzc="
     },
     "assembly": {
       "Blazored.LocalStorage.12n6dz54qr.wasm": "sha256-OaMAAd5n7ORfyur5e3QIyEVKJ76MKIvwbg7/icnnYcU=",
@@ -115,7 +115,7 @@
       "System.Text.RegularExpressions.hjk9iz4ims.wasm": "sha256-PU6LMO9eWd5McXjq3Yk1QF5PJE5K1Bdm8BS6TaTtfcI=",
       "System.Threading.kz1xg6b1zt.wasm": "sha256-UGB8YJJufJFWDxfdW4Fd5rOlFUdaThTtqJ7rgVXWA6A=",
       "System.v2bpr4wvug.wasm": "sha256-V0+qqJsDHNUBCJjD4bkeDVr+f+Orz+wNldNNIxrsd+4=",
-      "CaloriesTracker.2yke3pk44h.wasm": "sha256-dnfgEqcpn3b6CEkUUvZ2KHCrM0ceKuGtMcYXfSumObc="
+      "CaloriesTracker.nkw7wta018.wasm": "sha256-p/RVfRIFHvNUZm3SV8mS1nyVQK5F2QhTzxCSXuQRQNU="
     }
   },
   "cacheBootResources": true,
